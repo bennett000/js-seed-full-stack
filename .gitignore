@@ -1,0 +1,36 @@
+# Mac.
+.DS_STORE
+
+# Node.
+node_modules
+npm-debug.log
+
+# Vim / Emacs
+*~
+*.swp
+*.swo
+*~
+*#
+
+# I like tmp folders
+tmp
+
+# No Webstorm for this
+.idea/
+
+# libraries are managed by bower
+lib
+
+# coverage folder
+coverage
+.coverdata
+.coverrun
+
+# CSS is generated
+src/client/css
+
+# ts-js is generated
+src/ts-js
+
+# debug folder
+debug
