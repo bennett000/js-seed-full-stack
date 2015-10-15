@@ -6,6 +6,8 @@ var express = require('express'),
     config = require(etc + 'config'),
     getIps = require('./util/get-ip-addresses'),
     compression = require('compression'),
+    bodyParser = require('body-parser'),
+    authentication = require('./authentication'),
     startAttempts = 0,
     DEFAULT_PORT = 3000,
     DEFAULT_SSL_KEY_PATH = etc + 'ssl/server.key',
@@ -18,7 +20,15 @@ module.exports = {
     kill: finish
 };
 
-app.use(express.static('./www'));
+app.set('view engine', 'ejs');
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
+app.get('/login', getLoginPage);
+app.use(express['static']('./www'));
+authentication.init(app);
+
 if (config.compression) {
     app.use(compression());
 }
@@ -124,3 +134,6 @@ function finish(status) {
     }
 }
 
+function getLoginPage(req, res) {
+    res.redirect('/#login');
+}

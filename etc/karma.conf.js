@@ -19,8 +19,10 @@ module.exports = function (config) {
             files: [
                 'node_modules/angular/angular.js',
                 'node_modules/angular-route/angular-route.js',
+                'node_modules/angular-aria/angular-aria.js',
                 'node_modules/angular-mocks/angular-mocks.js',
                 'src/client/js/**/*.js',
+                'src/client/html-js/**/*.js',
 
                 'src/client/spec/mock*.js',
                 'src/client/spec/*.spec.js'
@@ -74,8 +76,18 @@ module.exports = function (config) {
             singleRun: false,
 
             // coverage support
+            // html directive testing support
             preprocessors: {
                 'src/client/js/**/*.js': ['coverage']
+                //'src/client/html/**/*.html': ['ng-html2js']
             }
+            //ngHtml2JsPreprocessor: {
+            //    // If your build process changes the path to your templates,
+            //    // use stripPrefix and prependPrefix to adjust it.
+            //    stripPrefix: 'src/client/',
+            //
+            //    // the name of the Angular module to create
+            //    moduleName: 'MealCalories'
+            //}
         });
 };

@@ -48,3 +48,15 @@ html, body {
 .mc-main {
   width: 100%;
   height: 100%; }
+
+.mc-login-form {
+  color: #e7ffec; }
+
+.mc-login-form input {
+  background-color: #e7ffec; }
+
+.mc-login-form input.ng-invalid.ng-touched {
+  background-color: #ff3852; }
+
+.mc-login-form input.ng-valid.ng-touched {
+  background-color: #e7ffec; }

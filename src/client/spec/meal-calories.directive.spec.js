@@ -17,9 +17,9 @@ describe('mealCalorie Directive', function () {
 
     it('compiles',
         inject(function () {
-            var el = $compile('<meal-calories></meal-calories>')($rootScope);
+            var el = $compile('<mc-main></mc-main>')($rootScope);
             $rootScope.$digest();
-            expect(el.text()).toBe('Hello World!');
+            expect(el.text()).toBe('');
         }));
 
 });

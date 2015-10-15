@@ -1,0 +1,15 @@
+.mc-login-form {
+  color: $light_text;
+}
+
+.mc-login-form input {
+  background-color: $input_bg;
+}
+
+.mc-login-form input.ng-invalid.ng-touched {
+  background-color: $red_invalid;
+}
+
+.mc-login-form input.ng-valid.ng-touched {
+  background-color: $input_bg;
+}
