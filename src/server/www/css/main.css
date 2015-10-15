@@ -60,3 +60,15 @@ html, body {
 
 .mc-login-form input.ng-valid.ng-touched {
   background-color: #e7ffec; }
+
+.mc-new-user-form {
+  color: #e7ffec; }
+
+.mc-new-user-form input {
+  background-color: #e7ffec; }
+
+.mc-new-user-form input.ng-invalid.ng-touched {
+  background-color: #ff3852; }
+
+.mc-new-user-form input.ng-valid.ng-touched {
+  background-color: #e7ffec; }

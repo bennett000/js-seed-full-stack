@@ -14,6 +14,9 @@
             .when('/login', {
                 template: '<mc-login></mc-login>'
             })
+            .when('/new-user', {
+                template: '<mc-new-user></mc-new-user>'
+            })
             .otherwise({
                 template: 'Welcome'
             });

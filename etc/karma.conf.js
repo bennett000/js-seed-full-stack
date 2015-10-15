@@ -17,6 +17,7 @@ module.exports = function (config) {
 
             // list of files / patterns to load in the browser
             files: [
+                'node_modules/jshashes/hashes.js',
                 'node_modules/angular/angular.js',
                 'node_modules/angular-route/angular-route.js',
                 'node_modules/angular-aria/angular-aria.js',

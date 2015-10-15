@@ -1,6 +1,6 @@
 /*global describe, it, expect, spyOn, beforeEach, module, inject, afterEach */
 
-describe('mcLogin Service', function () {
+describe('mcLogin Service - login function', function () {
     'use strict';
 
     var $httpB, authReq;
@@ -74,4 +74,57 @@ describe('mcLogin Service', function () {
             $httpB.flush();
             expect(error1).not.toBe(error2);
         }));
+});
+
+describe('mcLogin Service - new user function', function () {
+    'use strict';
+
+    var $httpB, authReq;
+
+    beforeEach(function () {
+        module('MealCalories');
+    });
+
+    beforeEach(inject(function ($injector) {
+        $httpB = $injector.get('$httpBackend');
+        authReq = $httpB.when('POST', '/users/blah').
+            respond({name: 'george'});
+    }));
+
+    it('should have a promise returning newUser function',
+        inject(function (mcLogin) {
+            expect(mcLogin.newUser()).toBeTruthy();
+        }));
+
+    it('should resolve its promise on an HTTP 200x response *without* ' +
+        'including an error attribute on its result object',
+        inject(function (mcLogin) {
+            var done = false;
+            $httpB.expectPOST('/users/blah');
+            mcLogin.newUser({username: 'blah', password: 'secret'}).
+                then(function (result) {
+                    if (!result.error) {
+                        done = true;
+                    }
+                });
+            $httpB.flush();
+            expect(done).toBe(true);
+        }));
+
+    it('should resolve its promise on an HTTP response outside of 200x,' +
+        'and mark the result object\'s error attribute',
+        inject(function (mcLogin) {
+            var done = false;
+            authReq.respond(401, '');
+            $httpB.expectPOST('/users/blah');
+            mcLogin.newUser({username: 'blah', password: 'secret'}).
+                then(function (result) {
+                    if (result.error) {
+                        done = true;
+                    }
+                });
+            $httpB.flush();
+            expect(done).toBe(true);
+        }));
+
 });

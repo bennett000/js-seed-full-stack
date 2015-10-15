@@ -29,7 +29,7 @@ describe('mcLogin Directive', function () {
     it('compiles', inject(function () {
             var el = $compile('<mc-login></mc-login>')($rootScope);
             $rootScope.$digest();
-            expect(el.text().trim()).toBe('Username Password');
+            expect(el.text().trim()).toBe('Username Password Create New User');
         }));
 
     it('shows error text on an invalid login', inject(function () {
@@ -38,7 +38,7 @@ describe('mcLogin Directive', function () {
         $rootScope.$digest(); // digest the compiled changes
         $rootScope.login();   // trigger the login
         $rootScope.$digest(); // digest the login's promise
-        expect(el.text().trim()).not.toBe('Username Password');
+        expect(el.text().trim()).not.toBe('Username Password Create New User');
     }));
 
     it('hides error text on a valid login', inject(function () {
@@ -47,11 +47,11 @@ describe('mcLogin Directive', function () {
         $rootScope.$digest(); // digest the compiled changes
         $rootScope.login();   // trigger the login
         $rootScope.$digest(); // digest the login's promise
-        expect(el.text().trim()).not.toBe('Username Password'); // "control"
+        expect(el.text().trim()).not.toBe('Username Password Create New User');
         delete loginResults.error; // clear the error
         $rootScope.login();   // trigger the login
         $rootScope.$digest(); // digest the login's promise
-        expect(el.text().trim()).toBe('Username Password'); // "control"
+        expect(el.text().trim()).toBe('Username Password Create New User');
     }));
 
 });

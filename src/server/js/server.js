@@ -21,6 +21,9 @@ module.exports = {
 };
 
 app.set('view engine', 'ejs');
+if (config.compression) {
+    app.use(compression());
+}
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -29,9 +32,6 @@ app.get('/login', getLoginPage);
 app.use(express['static']('./www'));
 authentication.init(app);
 
-if (config.compression) {
-    app.use(compression());
-}
 
 start();
 

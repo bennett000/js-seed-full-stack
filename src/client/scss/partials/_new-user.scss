@@ -1,0 +1,15 @@
+.mc-new-user-form {
+  color: $light_text;
+}
+
+.mc-new-user-form input {
+  background-color: $input_bg;
+}
+
+.mc-new-user-form input.ng-invalid.ng-touched {
+  background-color: $red_invalid;
+}
+
+.mc-new-user-form input.ng-valid.ng-touched {
+  background-color: $input_bg;
+}

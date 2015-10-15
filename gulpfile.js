@@ -2,6 +2,8 @@
 
 /*global require, __dirname */
 var gulp = require('gulp'),
+    gulpMerge = require('gulp-merge'),
+    gulpUtil = require('gulp-util'),
     /** CHANGE CC_PATH to point to system's copy of closure compiler */
     CC_PATH = '/usr/local/lib/closure-compiler/build/compiler.jar',
     /** */
@@ -17,7 +19,6 @@ var gulp = require('gulp'),
     ngHtml2Js = require('gulp-ng-html2js'),
     protractor = require('gulp-protractor'),
     ejs = require('gulp-ejs'),
-    gutil = require('gulp-util'),
     sass = require('gulp-sass'),
     glob = require('glob'),
     mkdirp = require('mkdirp'),
@@ -26,6 +27,9 @@ var gulp = require('gulp'),
     htmlFiles = ['./src/client/html/**/*.html'],
     scssFiles = ['./src/client/scss/**/*.scss'],
     partialsFileName = 'partials-generated.js',
+    clientLibUgly = [
+        './node_modules/jshashes/hashes.min.js'
+    ],
     clientLib = [
         './node_modules/angular/angular.js',
         './node_modules/angular-route/angular-route.js',
@@ -63,7 +67,7 @@ function testE2e() {
             args: ['--baseUrl', 'http://127.0.0.1:' + config.port]
         }))
         .on('error', function (e) {
-            gutil.log('Error: ' + e.message);
+            gulpUtil.log('Error: ' + e.message);
             throw e;
         }).on('end', function () {
             app.kill();
@@ -72,7 +76,7 @@ function testE2e() {
 
 function minifyClient() {
     mkdirp('./src/server/www/js');
-    return gulp.src(
+    var ccStream = gulp.src(
         clientLib.concat([
             './src/client/js/**/*.js',
             './src/client/html-js/' + partialsFileName])
@@ -89,8 +93,12 @@ function minifyClient() {
                 angular_pass: true,
                 jscomp_off: 'misplacedTypeAnnotation'
             }
-        })).
-        pipe(gulp.dest('./src/server/www/js/'));
+        })),
+        uglyStream = gulp.src(clientLibUgly);
+
+    return gulpMerge(uglyStream, ccStream).
+        pipe(concat('meal-calories.min.js')).
+        pipe(gulp.dest('src/server/www/js/'));
 }
 
 function scss() {
@@ -144,7 +152,7 @@ function testKarma(done) {
     });
 
     server.on('browser_error', function (browser, err) {
-        gutil.log('Karma Run Failed: ' + err.message);
+        gulpUtil.log('Karma Run Failed: ' + err.message);
         throw err;
     });
 
@@ -152,7 +160,7 @@ function testKarma(done) {
         if (results.failed) {
             throw new Error('Karma: Tests Failed');
         }
-        gutil.log('Karma Run Complete: No Failures');
+        gulpUtil.log('Karma Run Complete: No Failures');
         done();
     });
 
@@ -173,8 +181,9 @@ function clientLocalizeFile(fileName) {
 
 function generateTemplates(done) {
     glob('./src/client/js/**/*.js', {}, function (er, files) {
-        gutil.log('Make debug HTML');
+        gulpUtil.log('Make debug HTML');
         files = clientLib.map(clientLocalizeFile).
+            concat(clientLibUgly.map(clientLocalizeFile)).
             concat(files.map(localizeFile));
         gulp.src(ejsFiles).
             pipe(ejs({
@@ -185,7 +194,7 @@ function generateTemplates(done) {
         done();
     });
 
-    gutil.log('Make server HTML');
+    gulpUtil.log('Make server HTML');
     gulp.src(ejsFiles).
         pipe(ejs({
             styles: ['css/main.css'],
@@ -219,13 +228,13 @@ function watchHTML() {
     var scssw = gulp.watch(htmlFiles, ['bundle-html']);
 
     scssw.on('end', function () {
-        gutil.log('HTML Watch: Complete');
+        gulpUtil.log('HTML Watch: Complete');
     });
     scssw.on('error', function (err) {
-        gutil.log('HTML Watch: Error: ', err);
+        gulpUtil.log('HTML Watch: Error: ', err);
     });
     scssw.on('nomatch', function () {
-        gutil.log('HTML Watch: Nothing To Watch');
+        gulpUtil.log('HTML Watch: Nothing To Watch');
     });
 }
 
@@ -233,13 +242,13 @@ function watchSCSS() {
     var scssw = gulp.watch(scssFiles, ['scss']);
 
     scssw.on('end', function () {
-        gutil.log('Sass Watch: Complete');
+        gulpUtil.log('Sass Watch: Complete');
     });
     scssw.on('error', function (err) {
-        gutil.log('Sass Watch: Error: ', err);
+        gulpUtil.log('Sass Watch: Error: ', err);
     });
     scssw.on('nomatch', function () {
-        gutil.log('Sass Watch: Nothing To Watch');
+        gulpUtil.log('Sass Watch: Nothing To Watch');
     });
 }
 
@@ -247,13 +256,13 @@ function watchEJS() {
     var scssw = gulp.watch(ejsFiles, ['ejs']);
 
     scssw.on('end', function () {
-        gutil.log('ejs Watch: Complete');
+        gulpUtil.log('ejs Watch: Complete');
     });
     scssw.on('error', function (err) {
-        gutil.log('ejs Watch: Error: ', err);
+        gulpUtil.log('ejs Watch: Error: ', err);
     });
     scssw.on('nomatch', function () {
-        gutil.log('ejs Watch: Nothing To Watch');
+        gulpUtil.log('ejs Watch: Nothing To Watch');
     });
 }
 
