@@ -1,9 +1,15 @@
 'use strict';
 /*global module, require, process, __dirname */
 var express = require('express'),
-    config = require(__dirname + '/../../../etc/config'),
+    fs = require('fs'),
+    etc = __dirname + '/../../../etc/',
+    config = require(etc + 'config'),
     getIps = require('./util/get-ip-addresses'),
+    compression = require('compression'),
+    startAttempts = 0,
     DEFAULT_PORT = 3000,
+    DEFAULT_SSL_KEY_PATH = etc + 'ssl/server.key',
+    DEFAULT_SSL_CERT_PATH = etc + 'ssl/server.crt',
     server,
     app = express();
 
@@ -13,22 +19,98 @@ module.exports = {
 };
 
 app.use(express.static('./www'));
+if (config.compression) {
+    app.use(compression());
+}
 
 start();
 
-function start() {
-    var port = config.port || DEFAULT_PORT;
-    server = app.listen(port, function () {
+function getSSLOptions() {
+    try {
+        return {
+            key: fs.readFileSync(config.ssl.key),
+            cert: fs.readFileSync(config.ssl.cert)
+        };
+    } catch (err) {
         /*global console*/
-        getIps(function (err, ips) {
-            if (err) {
-                console.log('Error getting local IP addresses', err.message);
-                return;
+        console.log('Error loading SSL certs: ', err.message);
+        console.log('Using dev/debug SSL certs instead');
+        console.log('If this is a production deployment, please stop');
+        console.log('');
+        if (startAttempts) {
+            throw err;
+        }
+        config.ssl.key = DEFAULT_SSL_KEY_PATH;
+        config.ssl.cert = DEFAULT_SSL_CERT_PATH;
+        config.ssl.usingDefault = true;
+        startAttempts += 1;
+        return getSSLOptions();
+    }
+}
+
+function getPort() {
+    return config.port || DEFAULT_PORT;
+}
+
+function getSSL() {
+    if (!config.ssl) {
+        config.ssl = {};
+    }
+    if (!config.ssl.enabled) {
+        config.ssl.enabled = false;
+        return config.ssl;
+    }
+    config.ssl.enabled = true;
+    if (!config.ssl.key) {
+        config.ssl.key = DEFAULT_SSL_KEY_PATH;
+        config.ssl.usingDefault = true;
+    }
+    if (!config.ssl.cert) {
+        config.ssl.cert = DEFAULT_SSL_CERT_PATH;
+        config.ssl.usingDefault = true;
+    }
+}
+
+function createServer() {
+    getSSL();
+
+    var port = getPort(),
+        protocol;
+
+    if (config.ssl.enabled) {
+        protocol = require('https');
+        return protocol.createServer(getSSLOptions(), app).listen(port);
+    }
+    protocol = require('http');
+    return protocol.createServer(app).listen(port);
+}
+
+function start() {
+    /*global console*/
+    getSSL();
+
+    var port = getPort(),
+        protocol = config.ssl.enabled ? 'https://' : 'http://';
+
+    server = createServer();
+
+    getIps(function (err, ips) {
+        if (err) {
+            console.log('Error getting local IP addresses', err.message);
+            return;
+        }
+        ips.forEach(function (host) {
+            var sslNotice = '';
+            if (config.ssl.enabled) {
+                sslNotice = '(encrypted)';
+            } else {
+                sslNotice = '(*not encrypted*)';
             }
-            ips.forEach(function (host) {
-                console.log('Meal Calories listening at http://%s:%s', host,
-                    port);
-            });
+            console.log('Meal Calories listening at %s%s:%s', protocol, host,
+                port, sslNotice);
+            if (config.ssl.usingDefault) {
+                console.log('*NOTE* Using Default/Dev/Debug SSL Keys');
+            }
         });
     });
 
