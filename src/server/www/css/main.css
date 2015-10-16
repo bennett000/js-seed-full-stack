@@ -72,3 +72,15 @@ html, body {
 
 .mc-new-user-form input.ng-valid.ng-touched {
   background-color: #e7ffec; }
+
+.mc-change-password-form {
+  color: #e7ffec; }
+
+.mc-change-password-form input {
+  background-color: #e7ffec; }
+
+.mc-change-password-form input.ng-invalid.ng-touched {
+  background-color: #ff3852; }
+
+.mc-change-password-form input.ng-valid.ng-touched {
+  background-color: #e7ffec; }

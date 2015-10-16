@@ -29,7 +29,8 @@ describe('mcNewUser Directive', function () {
     it('compiles', inject(function () {
             var el = $compile('<mc-new-user></mc-new-user>')($rootScope);
             $rootScope.$digest();
-            expect(el.text().trim()).toBe('Username Password Password');
+            expect(el.text().trim()).
+                toBe('User CreatedUsername Password Password');
         }));
 
     it('shows error text on an invalid user', inject(function () {
@@ -51,7 +52,7 @@ describe('mcNewUser Directive', function () {
         delete newUserResults.error; // clear the error
         $rootScope.newUser();   // trigger the login
         $rootScope.$digest(); // digest the login's promise
-        expect(el.text().trim()).toBe('Username Password Password');
+        expect(el.text().trim()).toBe('User CreatedUsername Password Password');
     }));
 
 });

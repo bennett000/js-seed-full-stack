@@ -25,6 +25,7 @@
                         scope.result.error = result.error;
                     } else {
                         scope.result.error = '';
+                        scope.result.success = true;
                     }
                 });
             };

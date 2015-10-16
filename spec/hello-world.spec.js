@@ -4,9 +4,8 @@
 var env = require('./env');
 
 describe('Hello World', function() {
-    var address = env.protocol + env.address + ':' + env.port;
     it('should have a title', function() {
-        browser.get(address);
+        browser.get(env.url());
 
         expect(browser.getTitle()).toEqual('Calorie Counter');
     });

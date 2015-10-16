@@ -9,5 +9,14 @@ var serverConfig = require('../etc/config'),
 module.exports = {
     address: '127.0.0.1',
     port: port,
-    protocol: protocol
+    protocol: protocol,
+    url: url
 };
+
+function url() {
+    var u = module.exports.protocol + module.exports.address;
+    if (module.exports.port) {
+        u += ':' + module.exports.port;
+    }
+    return u;
+}

@@ -8,6 +8,7 @@ var express = require('express'),
     compression = require('compression'),
     bodyParser = require('body-parser'),
     authentication = require('./authentication'),
+    users = require('./users'),
     startAttempts = 0,
     DEFAULT_PORT = 3000,
     DEFAULT_SSL_KEY_PATH = etc + 'ssl/server.key',
@@ -28,8 +29,9 @@ if (config.compression) {
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.get('/login', getLoginPage);
 app.use(express['static']('./www'));
+
+app.put('/users/:id', newUser);
 authentication.init(app);
 
 
@@ -134,6 +136,13 @@ function finish(status) {
     }
 }
 
-function getLoginPage(req, res) {
-    res.redirect('/#login');
+function newUser(req, res) {
+    users.create({
+        id: req.body.username,
+        password: req.body.password
+    }).then(function (user) {
+        res.json(user);
+    }, function (err) {
+        res.status(500).json({ error: err.message });
+    });
 }

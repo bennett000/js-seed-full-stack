@@ -11,8 +11,9 @@
         <input type="password" id="password" ng-model="user.password" required/>
     </div>
     <div class="mc-login-button">
-        <input type="submit" ng-click="login(user)" value="Login"/>
+        <input id="mc-button-login" type="submit" ng-click="login(user)"
+               value="Login"/>
     </div>
-    <a class="mc-login-new-user-link" href="/#/new-user"
+    <a class="mc-login-new-user-link" href="/#/sign-up"
        title="Create New User">Create New User</a>
 </form>

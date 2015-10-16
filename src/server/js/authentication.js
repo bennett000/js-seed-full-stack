@@ -8,16 +8,14 @@ var LocalStrategy = require('passport-local').Strategy,
     config = require(etc + 'config'),
     passport = require('passport'),
     session = require('express-session'),
-    users = {
-        michael: {
-            name: 'MJ Bennett',
-            pass: 'test'
-        }
-    };
+    hash = require('./util/crypto-hash'),
+    LOGIN_PATH = '/#/login',
+    users = require('./users');
 
 module.exports.init = init;
 
 function init(app) {
+    app.get('/login', getLoginPage);
     app.use(session({
         secret: config.sessionSecret,
         resave: true,
@@ -28,23 +26,23 @@ function init(app) {
     app.use(passport.initialize());
     app.use(passport.session());
 
-    passport.serializeUser(function (user, cb) {
-        cb(null, user.name);
-    });
+    passport.serializeUser(serializeUser);
 
-    passport.deserializeUser(function (email, cb) {
-        cb(null, {});
-    });
+    passport.deserializeUser(deserializeUser);
 
     app.post('/login', authenticateUserEndpoint);
+    app.post('/logout', logoutUser);
 }
 
 function authLocal(user, pass, done) {
-    if ((users[user]) && (users[user].pass === pass)) {
-        done(null, users[user]);
-        return;
-    }
-    done(null, false, {message: 'Invalid Login Credentials'});
+    users.find(user).then(function (found) {
+        return hash.verify(found.password, pass).then(function () {
+            done(null, found);
+        });
+    }).fail(function () {
+        done(null, false, {message: 'Invalid Login Credentials'});
+    });
+
 }
 
 function authenticateUserEndpoint(req, res, next) {
@@ -62,4 +60,24 @@ function authenticateUserEndpoint(req, res, next) {
             return res.json(user.name);
         });
     })(req, res, next);
+}
+
+function logoutUser(req, res) {
+    req.session.destroy(function () {
+        res.redirect(LOGIN_PATH);
+    });
+}
+
+function getLoginPage(req, res) {
+    res.redirect(LOGIN_PATH);
+}
+
+function serializeUser(user, cb) {
+    console.log('serialize user', user);
+    cb(null, user.id);
+}
+
+function deserializeUser(email, cb) {
+    console.log('deserialize user', email);
+    cb(null, {});
 }
