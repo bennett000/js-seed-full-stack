@@ -15,17 +15,21 @@
             scope.user = {
                 username: '',
                 password: '',
+                passwordNew: '',
                 passwordConfirm: ''
             };
             scope.result = {
-                error: ''
+                error: '',
+                success: null
             };
             scope.changePassword = function newUser(user) {
                 mcLogin.changePassword(user).then(function (result) {
                     if (result.error) {
                         scope.result.error = result.error;
+                        scope.result.success = null;
                     } else {
                         scope.result.error = '';
+                        scope.result.success = 'Password Changed';
                     }
                 });
             };

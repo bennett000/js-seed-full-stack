@@ -4,7 +4,8 @@ describe('Change Password Directive', function () {
     'use strict';
 
     var $compile, $rootScope, changePassResults = {},
-        expectedText1 = 'Password New Password Confirm Password';
+        expectedText1 = 'Password New Password Confirm Password',
+        changedText1 = 'Password Changed' + expectedText1;
 
     beforeEach(function () {
         module('MealCalories');
@@ -56,7 +57,7 @@ describe('Change Password Directive', function () {
         delete changePassResults.error; // clear the error
         $rootScope.changePassword();   // trigger the login
         $rootScope.$digest(); // digest the login's promise
-        expect(el.text().trim()).toBe(expectedText1);
+        expect(el.text().trim()).toBe(changedText1);
     }));
 
 });

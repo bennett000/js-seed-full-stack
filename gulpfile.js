@@ -40,7 +40,7 @@ var gulp = require('gulp'),
 gulp.task('webdriver_update', protractor.webdriver_update);
 gulp.task('webdriver_standalone', protractor.webdriver_standalone);
 gulp.task('default', ['test-karma', 'build']);
-gulp.task('build', ['test-unit', 'ejs', 'bundle-html', 'scss', 'minify']);
+gulp.task('build', ['test-unit', 'ejs', 'scss', 'minify']);
 gulp.task('bundle-html', bundleHTML);
 gulp.task('hint', ['hint-client', 'hint-server']);
 gulp.task('ejs', generateTemplates);
@@ -53,7 +53,7 @@ gulp.task('test-unit', ['test-server', 'test-client']);
 gulp.task('test-e2e', ['webdriver_update'], testE2e);
 gulp.task('test-server', ['hint-server', 'test-jasmine']);
 gulp.task('test-client', ['hint-client', 'test-karma']);
-gulp.task('minify', minifyClient);
+gulp.task('minify', ['bundle-html'], minifyClient);
 gulp.task('test-jasmine', testJasmine);
 gulp.task('test-karma', testKarma);
 gulp.task('watch', watch);

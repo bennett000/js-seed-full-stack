@@ -17,18 +17,26 @@
                 passwordConfirm: ''
             };
             scope.result = {
-                error: ''
+                error: '',
+                success: null
             };
             scope.newUser = function newUser(user) {
                 mcLogin.newUser(user).then(function (result) {
                     if (result.error) {
-                        scope.result.error = result.error;
+                        resultError(result.error);
                     } else {
                         scope.result.error = '';
-                        scope.result.success = true;
+                        scope.result.success = 'User Created';
                     }
+                }, function (err) {
+                    resultError(err.message);
                 });
             };
+
+            function resultError(err) {
+                scope.result.error = err;
+                scope.result.success = null;
+            }
         }
 
         return {

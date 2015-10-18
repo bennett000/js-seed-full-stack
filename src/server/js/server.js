@@ -47,7 +47,7 @@ app.put('/users/:id', [
     ensureAuth(LOGIN_PATH),   // ensure logged in
     users.endpoints.update]); // update user
 
-app.post('/logout', [
+app.get('/logout', [
     ensureAuth(LOGIN_PATH),          // log out only if logged in
     authentication.endpoints.logout, // actually logout
     logout]);                        // redirect

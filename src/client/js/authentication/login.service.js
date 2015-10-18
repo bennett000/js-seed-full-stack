@@ -14,6 +14,7 @@
      * @returns {string}
      */
     function clientSideHash(str) {
+        /*global Hashes*/
         return new Hashes.SHA256().b64(str);
     }
 
@@ -22,11 +23,39 @@
      * @param {$http} $http
      * @param {$q} $q
      * @param {$location} $location
+     * @param {sessionStorage} sessionStorage
      */
-    function LoginService($http, $q, $location) {
+    function LoginService($http, $q, $location, sessionStorage) {
         this.login = login;
+        this.logout = logout;
         this.newUser = newUser;
         this.changePassword = changePassword;
+        this.user = accessUser;
+
+        var loggedInUser = null, initDefer = $q.defer(),
+            USER_KEY = 'user';
+
+        this.initPromise = initDefer.promise;
+
+        sessionStorage.get(USER_KEY).then(function (user) {
+            loggedInUser = user;
+            initDefer.resolve();
+        }, function () {
+            initDefer.resolve();
+        });
+
+        function logout() {
+            $http.get('/logout').then(function () {
+                return sessionStorage.remove(USER_KEY).then(function () {
+                    loggedInUser = null;
+                    $location.path('/login');
+                });
+            });
+        }
+
+        function accessUser() {
+            return loggedInUser;
+        }
 
         /**
          * @param {*} user
@@ -37,7 +66,7 @@
             /*global Hashes*/
             user = user || {};
             var reqUser = {};
-            reqUser.username = user.username || 'nobody';
+            reqUser.username = user.username;
             reqUser.password = clientSideHash(user.password);
             if (user.passwordNew) {
                 reqUser.passwordNew = clientSideHash(user.passwordNew);
@@ -52,7 +81,13 @@
         function login(user) {
             user = validateUser(user);
             return $http.post('/login', user).then(function (result) {
-                return {data: result.data};
+                loggedInUser = result.data;
+                console.log('log in');
+                return sessionStorage.set(USER_KEY, loggedInUser).
+                    then(function () {
+                        $location.path('/');
+                        return {data: loggedInUser};
+                    });
             }, function (response) {
                 var error = '';
                 if (response.status === 401) {
@@ -109,17 +144,26 @@
          * @returns {$q.promise}
          */
         function changePassword(user) {
-            var promise = confirmPassword(user, 'passwordNew');
+            var promise = confirmPassword(user, 'passwordNew'), d;
             if (promise) {
                 return promise;
             }
+            if (!loggedInUser) {
+                d = $q.defer();
+                d.reject(new Error('not logged in...'));
+                return d.promise;
+            }
             user = validateUser(user);
+            user.username = loggedInUser.id;
             return $http.put('/users/' + user.username + '/password', user).
                 then(function (result) {
                     return {data: result.data};
                 }, function (response) {
-                    var error = response.data.error ||
+                    var error = response;
+                    if (response.data) {
+                        error = response.data.error ||
                         'Unexpected Server Error';
+                    }
                     return {error: error};
                 });
         }

@@ -24,7 +24,8 @@ function init(app) {
     app.use(session({
         secret: config.sessionSecret,
         resave: true,
-        saveUninitialized: true
+        saveUninitialized: true,
+        name: config.sessionCookieName || 'connect.sid'
     }));
 
     passport.use('login-local', new LocalStrategy(authLocal));
@@ -48,16 +49,17 @@ function authLocal(user, pass, done) {
 function authenticateUserEndpoint(req, res, next) {
     passport.authenticate('login-local', function (err, user, info) {
         if (err) {
-            return next(err);
+            res.status(500).json({ error: err.message });
         }
         if (!user) {
             return res.sendStatus(401);
         }
         req.logIn(user, function (err) {
             if (err) {
-                return next(err);
+                res.status(500).json({ error: err.message });
+            } else {
+                res.json(user);
             }
-            return res.json(user.name);
         });
     })(req, res, next);
 }
@@ -75,5 +77,7 @@ function serializeUser(user, cb) {
 
 function deserializeUser(email, cb) {
     console.log('deserialize user', email);
-    cb(null, {});
+    users.find(email).then(function (user) {
+        cb(null, user);
+    }, cb);
 }

@@ -4,16 +4,24 @@ describe('mcNewUser Directive', function () {
     'use strict';
 
     var $compile, $rootScope, newUserResults = {},
-        expectedText1 = 'User CreatedUsername Password Confirm Password';
+        expectedText1 = 'Username Password Confirm Password',
+        updatedText1 = 'User Created' + expectedText1, newUserFail = false;
 
     beforeEach(function () {
         module('MealCalories');
+
+        newUserFail = false;
 
         module(function ($provide) {
             $provide.service('mcLogin', function ($q) {
                 this.newUser = function newUser() {
                     var d = $q.defer();
-                    d.resolve(newUserResults);
+
+                    if (newUserFail) {
+                        d.reject(new Error(newUserFail));
+                    } else {
+                        d.resolve(newUserResults);
+                    }
                     return d.promise;
                 };
             });
@@ -35,7 +43,7 @@ describe('mcNewUser Directive', function () {
         }));
 
     it('shows error text on an invalid user', inject(function () {
-        newUserResults.error = true;
+        newUserResults.error = 'some error';
         var el = $compile('<mc-new-user></mc-new-user>')($rootScope);
         $rootScope.$digest(); // digest the compiled changes
         $rootScope.newUser();   // trigger the login
@@ -44,7 +52,7 @@ describe('mcNewUser Directive', function () {
     }));
 
     it('hides error text on invalid user', inject(function () {
-        newUserResults.error = true;
+        newUserResults.error = 'some error';
         var el = $compile('<mc-new-user></mc-new-user>')($rootScope);
         $rootScope.$digest(); // digest the compiled changes
         $rootScope.newUser();   // trigger the login
@@ -53,7 +61,18 @@ describe('mcNewUser Directive', function () {
         delete newUserResults.error; // clear the error
         $rootScope.newUser();   // trigger the login
         $rootScope.$digest(); // digest the login's promise
-        expect(el.text().trim()).toBe(expectedText1);
+        expect(el.text().trim()).toBe(updatedText1);
+    }));
+
+    it('should clear the result object if newUser fails', inject(function () {
+        newUserFail = 'test fail';
+        var el = $compile('<mc-new-user></mc-new-user>')($rootScope);
+        $rootScope.$digest(); // digest the compiled changes
+        expect($rootScope.result).toBeTruthy();
+        $rootScope.result.success = 'booya';
+        $rootScope.newUser();   // trigger the login
+        $rootScope.$apply();
+        expect($rootScope.result.success).toBeFalsy();
     }));
 
 });

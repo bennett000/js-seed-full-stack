@@ -80,8 +80,10 @@ function changePassword(req, res) {
     passwords.change(req.body.username,
         req.body.password, req.body.passwordNew).
         then(function () {
-            res.status(200);
+            console.log('200');
+            res.sendStatus(200);
         }, function (err) {
+            console.log(500, err);
             res.status(500).json({error: err.message});
         });
 }
