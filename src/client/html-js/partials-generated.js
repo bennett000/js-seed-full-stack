@@ -54,7 +54,7 @@ try {
 }
 module.run(['$templateCache', function($templateCache) {
   $templateCache.put('html/meals.html',
-    '<ul><li ng-repeat="meal in meals"><mc-meal meal="meal"></mc-meal></li></ul>');
+    '<ul><li>Start <input type="date" ng-model="startDate" ng-change="filter()"> End <input type="date" ng-model="endDate" ng-change="filter()"></li><li ng-repeat="meal in meals"><mc-meal meal="meal"></mc-meal></li></ul>');
 }]);
 })();
 

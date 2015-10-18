@@ -1,3 +1,10 @@
 <ul>
-    <li ng-repeat="meal in meals"><mc-meal meal="meal"></mc-meal></li>
+    <li>Start <input type="date" ng-model="startDate" ng-change="filter()"/>
+        End <input type="date" ng-model="endDate" ng-change="filter()"/>
+    </li>
+    <!--<li>Start <input type="time" ng-model="startTime" ng-change="filter()"/>-->
+        <!--End <input type="time" ng-model="endTime" ng-change="filter()"/></li>-->
+    <li ng-repeat="meal in meals">
+        <mc-meal meal="meal"></mc-meal>
+    </li>
 </ul>

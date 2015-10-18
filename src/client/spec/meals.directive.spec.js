@@ -26,7 +26,7 @@ describe('mcUsers Directive', function () {
         inject(function () {
             var el = $compile('<mc-meals></mc-meals>')($rootScope);
             $rootScope.$digest();
-            expect(el.text()).toBe('');
+            expect(el.text().trim()).toBe('');
         }));
 
 });
