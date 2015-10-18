@@ -19,16 +19,19 @@
     /**
      * @ngInject
      * @param {mcLogin} mcLogin
+     * @param {$location} $location
      * @returns {$q.Promise}
      */
-    function checkAuthorityManager($q, mcLogin) {
+    function checkAuthorityManager($q, $location, mcLogin) {
         var d = $q.defer(),
             user = mcLogin.user();
         if (!user) {
+            $location.path('/');
             d.reject(new Error('Not Logged In'));
             return d.promise;
         }
         if (user.authority === 'regular') {
+            $location.path('/');
             d.reject(new Error('Not Auhtorized'));
             return d.promise;
         }
