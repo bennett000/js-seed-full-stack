@@ -8,11 +8,13 @@ var express = require('express'),
     compression = require('compression'),
     bodyParser = require('body-parser'),
     authentication = require('./authentication'),
+    ensureAuth = require('connect-ensure-login').ensureLoggedIn,
     users = require('./users'),
     startAttempts = 0,
     DEFAULT_PORT = 3000,
     DEFAULT_SSL_KEY_PATH = etc + 'ssl/server.key',
     DEFAULT_SSL_CERT_PATH = etc + 'ssl/server.crt',
+    LOGIN_PATH = '/#/login',
     server,
     app = express();
 
@@ -28,11 +30,27 @@ if (config.compression) {
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-
 app.use(express['static']('./www'));
 
-app.put('/users/:id', newUser);
 authentication.init(app);
+
+app.get('/login', getLoginPage);
+app.post('/login', authentication.endpoints.login);
+
+app.put('/users/:id/password', [
+    ensureAuth(LOGIN_PATH),     // ensure logged in
+    users.endpoints.password    // changes passwords
+]);
+
+app.put('/users/:id', [
+    createUser,               // create user if it does *not* exist
+    ensureAuth(LOGIN_PATH),   // ensure logged in
+    users.endpoints.update]); // update user
+
+app.post('/logout', [
+    ensureAuth(LOGIN_PATH),          // log out only if logged in
+    authentication.endpoints.logout, // actually logout
+    logout]);                        // redirect
 
 
 start();
@@ -136,13 +154,19 @@ function finish(status) {
     }
 }
 
-function newUser(req, res) {
-    users.create({
-        id: req.body.username,
-        password: req.body.password
-    }).then(function (user) {
-        res.json(user);
-    }, function (err) {
-        res.status(500).json({ error: err.message });
+function getLoginPage(req, res) {
+    res.redirect(LOGIN_PATH);
+}
+
+function logout(req, res) {
+    res.redirect(LOGIN_PATH);
+}
+
+function createUser(req, res, next) {
+    users.find(req.body.username).then(function foundUser() {
+        // handled elsewhere
+        next(req, res);
+    }, function () {
+        users.endpoints.create(req, res);
     });
 }

@@ -6,6 +6,18 @@
     angular.module('MealCalories').service('mcLogin', LoginService);
 
     /**
+     * Hashes a password to avoid clear text passwords _ever_ leaving the client
+     * code. This is _not_ to be confused with actual cryptographically secure
+     * hashing the _must_ be implemented in the server.
+     *
+     * @param {string} str
+     * @returns {string}
+     */
+    function clientSideHash(str) {
+        return new Hashes.SHA256().b64(str);
+    }
+
+    /**
      * @ngInject
      * @param {$http} $http
      * @param {$q} $q
@@ -18,14 +30,18 @@
 
         /**
          * @param {*} user
-         * @returns {{ username: string, password: string }}
+         * @returns {{ username: string, password: string,
+         passwordNew: string= }}
          */
         function validateUser(user) {
             /*global Hashes*/
             user = user || {};
             var reqUser = {};
             reqUser.username = user.username || 'nobody';
-            reqUser.password = new Hashes.SHA256().b64(user.password);
+            reqUser.password = clientSideHash(user.password);
+            if (user.passwordNew) {
+                reqUser.passwordNew = clientSideHash(user.passwordNew);
+            }
             return reqUser;
         }
 
@@ -52,11 +68,13 @@
         /**
          * @param {{ username: string, password: string,
          * passwordConfirm: string }} user
+         * @param {string=} field
          * @returns {$q.promise | null}
          */
-        function confirmPassword(user) {
+        function confirmPassword(user, field) {
+            field = field || 'password';
             user = user || {};
-            if (user.password === user.passwordConfirm) {
+            if (user[field] === user.passwordConfirm) {
                 return null;
             }
             var d = $q.defer();
@@ -87,16 +105,16 @@
 
         /**
          * @param {{ username: string, password: string,
-         * passwordConfirm: string }} user
+         * passwordNew: string, passwordConfirm: string }} user
          * @returns {$q.promise}
          */
         function changePassword(user) {
-            var promise = confirmPassword(user);
+            var promise = confirmPassword(user, 'passwordNew');
             if (promise) {
                 return promise;
             }
             user = validateUser(user);
-            return $http.put('/users/' + user.username, user).
+            return $http.put('/users/' + user.username + '/password', user).
                 then(function (result) {
                     return {data: result.data};
                 }, function (response) {

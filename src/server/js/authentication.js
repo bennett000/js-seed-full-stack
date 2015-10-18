@@ -8,14 +8,19 @@ var LocalStrategy = require('passport-local').Strategy,
     config = require(etc + 'config'),
     passport = require('passport'),
     session = require('express-session'),
-    hash = require('./util/crypto-hash'),
-    LOGIN_PATH = '/#/login',
-    users = require('./users');
+    users = require('./users'),
+    passwords = require('./passwords');
 
-module.exports.init = init;
+
+module.exports = {
+    init: init,
+    endpoints: {
+        login: authenticateUserEndpoint,
+        logout: logoutUser
+    }
+};
 
 function init(app) {
-    app.get('/login', getLoginPage);
     app.use(session({
         secret: config.sessionSecret,
         resave: true,
@@ -27,22 +32,17 @@ function init(app) {
     app.use(passport.session());
 
     passport.serializeUser(serializeUser);
-
     passport.deserializeUser(deserializeUser);
-
-    app.post('/login', authenticateUserEndpoint);
-    app.post('/logout', logoutUser);
 }
 
 function authLocal(user, pass, done) {
-    users.find(user).then(function (found) {
-        return hash.verify(found.password, pass).then(function () {
+    return passwords.verify(user, pass).then(function () {
+        return users.find(user).then(function (found) {
             done(null, found);
         });
     }).fail(function () {
         done(null, false, {message: 'Invalid Login Credentials'});
     });
-
 }
 
 function authenticateUserEndpoint(req, res, next) {
@@ -62,14 +62,10 @@ function authenticateUserEndpoint(req, res, next) {
     })(req, res, next);
 }
 
-function logoutUser(req, res) {
+function logoutUser(req, res, next) {
     req.session.destroy(function () {
-        res.redirect(LOGIN_PATH);
+        next(req, res);
     });
-}
-
-function getLoginPage(req, res) {
-    res.redirect(LOGIN_PATH);
 }
 
 function serializeUser(user, cb) {

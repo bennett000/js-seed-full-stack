@@ -3,12 +3,18 @@
 /*global require, module*/
 
 var users = Object.create(null),
+    passwords = require('./passwords'),
     hash = require('./util/crypto-hash'),
     Q = require('q');
 
 module.exports = {
     find: find,
-    create: createUser
+    create: createUser,
+    endpoints: {
+        update: updateUserEndpoint,
+        create: createUserEndpoint,
+        password: changePassword
+    }
 };
 
 /**
@@ -44,10 +50,15 @@ function createUser(user) {
     } else {
         d = Q.defer();
     }
-    hash.saltHashUser(user).then(function (newU) {
-        users[newU.id] = newU;
-        d.resolve(users[newU.id]);
-    }, d.reject);
+    passwords.create(user.id, user.password).then(function () {
+        // kill off the password attribute
+        delete user.password;
+        // create a _new_ user object
+        users[user.id] = {
+            id: user.id
+        };
+        d.resolve(users[user.id]);
+    });
     return d.promise;
 }
 
@@ -63,4 +74,28 @@ function find(id) {
         d.reject(new Error('findUser: user not found'));
     }
     return d.promise;
+}
+
+function changePassword(req, res) {
+    passwords.change(req.body.username,
+        req.body.password, req.body.passwordNew).
+        then(function () {
+            res.status(200);
+        }, function (err) {
+            res.status(500).json({error: err.message});
+        });
+}
+
+function createUserEndpoint(req, res) {
+    createUser({
+        id: req.body.username,
+        password: req.body.password
+    }).then(function (user) {
+        res.json(user);
+    }, function (err) {
+        res.status(500).json({error: err.message});
+    });
+}
+
+function updateUserEndpoint(req, res) {
 }

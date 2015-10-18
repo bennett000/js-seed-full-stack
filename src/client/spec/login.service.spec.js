@@ -146,7 +146,7 @@ describe('mcLogin Service - change password function', function () {
 
     beforeEach(inject(function ($injector) {
         $httpB = $injector.get('$httpBackend');
-        authReq = $httpB.when('PUT', '/users/blah').
+        authReq = $httpB.when('PUT', '/users/blah/password').
             respond({name: 'george'});
     }));
 
@@ -159,7 +159,7 @@ describe('mcLogin Service - change password function', function () {
         'including an error attribute on its result object',
         inject(function (mcLogin) {
             var done = false;
-            $httpB.expectPUT('/users/blah');
+            $httpB.expectPUT('/users/blah/password');
             mcLogin.changePassword({
                 username: 'blah', password: 'secret',
                 passwordConfirm: 'secret'
@@ -178,7 +178,7 @@ describe('mcLogin Service - change password function', function () {
         inject(function (mcLogin) {
             var done = false;
             authReq.respond(401, '');
-            $httpB.expectPUT('/users/blah');
+            $httpB.expectPUT('/users/blah/password');
             mcLogin.changePassword({
                 username: 'blah', password: 'secret',
                 passwordConfirm: 'secret'
