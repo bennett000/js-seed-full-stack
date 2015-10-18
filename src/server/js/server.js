@@ -155,11 +155,11 @@ function finish(status) {
 }
 
 function getLoginPage(req, res) {
-    res.redirect(LOGIN_PATH);
+    res.redirect(200, LOGIN_PATH);
 }
 
 function logout(req, res) {
-    res.redirect(LOGIN_PATH);
+    res.redirect(200, LOGIN_PATH);
 }
 
 function createUser(req, res, next) {

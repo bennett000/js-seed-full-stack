@@ -66,7 +66,7 @@ function authenticateUserEndpoint(req, res, next) {
 
 function logoutUser(req, res, next) {
     req.session.destroy(function () {
-        next(req, res);
+        next();
     });
 }
 

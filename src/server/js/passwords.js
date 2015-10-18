@@ -49,7 +49,6 @@ function createPassword(id, newPass) {
 function changePassword_(id, shash) {
     var d = Q.defer();
     passwords[id].saltedHash = shash;
-    console.log('resolve');
     d.resolve();
     return d.promise;
 }
@@ -63,9 +62,7 @@ function changePassword_(id, shash) {
 function changePassword(id, oldPass, newPass) {
     // change passwords
     return verify(id, oldPass).then(function () {
-        console.log('change password verified', id, oldPass);
         return hash.saltHash(newPass).then(function (shash) {
-            console.log('hashed');
             return changePassword_(id, shash);
         });
     });

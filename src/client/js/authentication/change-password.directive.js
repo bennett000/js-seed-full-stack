@@ -9,9 +9,12 @@
     /**
      * @ngInject
      */
-    function mcChangePassword(mcLogin) {
+    function mcChangePassword(mcLogin, $location) {
 
         function linkFn(scope) {
+            if (!mcLogin.user()) {
+                $location.path('/login');
+            }
             scope.user = {
                 username: '',
                 password: '',
