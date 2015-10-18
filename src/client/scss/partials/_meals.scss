@@ -1,0 +1,9 @@
+@import "../modules/colours";
+
+.calories_too_many {
+  background-color: $red_calories;
+}
+
+.calories_too_few {
+  background-color: $green_calories;
+}

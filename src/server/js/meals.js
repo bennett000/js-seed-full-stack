@@ -77,7 +77,7 @@ function createMeal(userId, meal) {
 }
 
 function changeMeal_(id, meal) {
-    var d = Q.defer(), m = validateMeal(id, meal);
+    var d = Q.defer(), m = validateMeal(meal);
 
     if (!m) {
         d.reject(new Error('changeMeal: invalid meal'));
@@ -152,13 +152,13 @@ function changeEndpoint(req, res) {
         return;
     }
 
-    changeMeal(req.user.id, validateMeal({
+    changeMeal(req.user.id, {
         id: id,
         userId: req.user.id,
         timestamp: req.body.timestamp || +Date.now(),
         text: req.body.text + '',
         calories: +req.body.calories
-    })).then(function (meal) {
+    }).then(function (meal) {
         res.json(meal);
     }, function (err) {
         res.status(500).json({error: err.message});

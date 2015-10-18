@@ -7,11 +7,13 @@
     /**
      * @ngInject
      * @param {meals} meals
+     * @param {mcLogin} mcLogin
      */
-    function mealDirective(meals) {
+    function mealDirective(meals, mcLogin) {
 
         function linkFn(scope) {
             scope.save = save;
+            scope.expectedCalories = mcLogin.user().expectedCalories;
 
             function save(meal) {
                 meals.save(meal);

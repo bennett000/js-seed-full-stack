@@ -84,3 +84,9 @@ html, body {
 
 .mc-change-password-form input.ng-valid.ng-touched {
   background-color: #e7ffec; }
+
+.calories_too_many {
+  background-color: #ff4c4c; }
+
+.calories_too_few {
+  background-color: #2a8048; }

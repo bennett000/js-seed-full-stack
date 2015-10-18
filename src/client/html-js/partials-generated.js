@@ -42,7 +42,7 @@ try {
 }
 module.run(['$templateCache', function($templateCache) {
   $templateCache.put('html/meal.html',
-    '<form><input type="text" ng-model="meal.text"> <input type="date" ng-model="meal.timestamp"> <input type="time" ng-model="meal.timestamp"> <input type="text" ng-model="meal.calories"> <input type="submit" ng-click="save(meal)" value="save"></form>');
+    '<form><input type="text" ng-model="meal.text"> <input type="date" ng-model="meal.timestamp"> <input type="time" ng-model="meal.timestamp"> <input type="text" ng-model="meal.calories" ng-class="{ calories_too_many: meal.calories >= expectedCalories, calories_too_few: meal.calories < expectedCalories }"> <input type="submit" ng-click="save(meal)" value="save"></form>');
 }]);
 })();
 

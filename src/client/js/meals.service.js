@@ -35,9 +35,12 @@
         }
 
         function save(meal) {
-            meal.timestamp = meal.timestamp.getTime();
-            $http.put('/meals/new', meal).then(function (results) {
-                meal.timestamp = new Date(meal.timestamp);
+            var m = angular.copy(meal), id = 'new';
+            m.timestamp = meal.timestamp.getTime();
+            if (m.id) {
+                id = m.id;
+            }
+            $http.put('/meals/' + id, m).then(function () {
                 update();
             });
         }
