@@ -11,8 +11,9 @@
 
     /**
      * @ngInject
+     * @param {users} users
      */
-    function mcNewUserDirective(mcLogin) {
+    function mcNewUserDirective(mcLogin, users) {
 
         function linkFn(scope) {
             scope.currentUser = mcLogin.user();
@@ -44,6 +45,7 @@
                     } else {
                         scope.result.error = '';
                         scope.result.success = 'User Created';
+                        users.notify();
                     }
                 }, function (err) {
                     resultError(err.message);

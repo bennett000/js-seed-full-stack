@@ -45,3 +45,27 @@ module.run(['$templateCache', function($templateCache) {
     '<ul class="mc-user-status"><li ng-if="user"><a href="#/logout" title="log out of Meal Calories">Log Out</a> <a href="#/password" title="Change Password">Change Password</a></li><li ng-if="!user"><a href="#/login" title="login to Meal Calories">Login</a> or <a href="#/sign-up" title="sign up for Meal Calories">Sign Up</a></li><li ng-if="user && user.authority != \'regular\'"><a href="#/users" title="Meal Calories users">Manage Users</a></li></ul>');
 }]);
 })();
+
+(function(module) {
+try {
+  module = angular.module('MealCalories');
+} catch (e) {
+  module = angular.module('MealCalories', []);
+}
+module.run(['$templateCache', function($templateCache) {
+  $templateCache.put('html/user.html',
+    '<div><div>{{ user.id }}</div><div>{{ user.authority }}</div></div>');
+}]);
+})();
+
+(function(module) {
+try {
+  module = angular.module('MealCalories');
+} catch (e) {
+  module = angular.module('MealCalories', []);
+}
+module.run(['$templateCache', function($templateCache) {
+  $templateCache.put('html/users.html',
+    '<ul><li ng-repeat="user in users"><mc-user mc-id="user.id"></mc-user></li></ul>');
+}]);
+})();

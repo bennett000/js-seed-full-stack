@@ -13,7 +13,8 @@ describe('mcNewUser Directive', function () {
         newUserFail = false;
 
         module(function ($provide) {
-            $provide.service('mcLogin', function ($q) {
+            $provide.service('mcLogin', function ($q, makeOnUpdate) {
+                makeOnUpdate(this);
                 this.newUser = function newUser() {
                     var d = $q.defer();
 
@@ -30,6 +31,9 @@ describe('mcNewUser Directive', function () {
                         authority: 'regular'
                     };
                 };
+            });
+            $provide.service('users', function (makeOnUpdate) {
+                makeOnUpdate(this);
             });
         });
     });

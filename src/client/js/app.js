@@ -70,7 +70,8 @@
                 }
             })
             .when('/users', {
-                template: '<mc-user-status></mc-user-status><div>USERS</div>',
+                template: '<mc-user-status></mc-user-status>' +
+                '<mc-users></mc-users>',
                 resolve: {
                     initLogin: checkMcLoginInit,
                     initAuthorityManager: checkAuthorityManager

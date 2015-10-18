@@ -24,16 +24,16 @@
      * @param {$q} $q
      * @param {$location} $location
      * @param {sessionStorage} sessionStorage
+     * @param {makeOnUpdate} makeOnUpdate
      */
-    function LoginService($http, $q, $location, sessionStorage) {
+    function LoginService($http, $q, $location, sessionStorage, makeOnUpdate) {
         this.login = login;
         this.logout = logout;
         this.newUser = newUser;
         this.changePassword = changePassword;
         this.user = accessUser;
-        this.onUpdate = onUpdate;
 
-        var updateListeners = Object.create(null),
+        var that = makeOnUpdate(this),
             loggedInUser = null, initDefer = $q.defer(),
             USER_KEY = 'user';
 
@@ -41,7 +41,7 @@
 
         sessionStorage.get(USER_KEY).then(function (user) {
             loggedInUser = user;
-            notify('login');
+            that.notify('login');
             initDefer.resolve();
         }, function () {
             initDefer.resolve();
@@ -51,7 +51,7 @@
             $http.get('/logout').then(function () {
                 return sessionStorage.remove(USER_KEY).then(function () {
                     loggedInUser = null;
-                    notify('logout');
+                    that.notify('logout');
                     $location.path('/login');
                 });
             });
@@ -86,7 +86,7 @@
             user = validateUser(user);
             return $http.post('/login', user).then(function (result) {
                 loggedInUser = result.data;
-                notify('login');
+                that.notify('login');
                 return sessionStorage.set(USER_KEY, loggedInUser).
                     then(function () {
                         $location.path('/');
@@ -170,28 +170,6 @@
                     }
                     return {error: error};
                 });
-        }
-
-        function notify(status) {
-            Object.keys(updateListeners).forEach(function (id) {
-                updateListeners[id].call(null, status);
-            });
-        }
-
-        /**
-         * @param {function(...)} fn
-         * @returns {function(...)}
-         */
-        function onUpdate(fn) {
-            if (!angular.isFunction(fn)) {
-                return angular.noop;
-            }
-            var id = +Date.now().toString(16) + Math.random();
-            updateListeners[id] = fn;
-            function destroy() {
-                delete updateListeners[id];
-            }
-            return destroy;
         }
     }
 
