@@ -8,9 +8,11 @@ var express = require('express'),
     compression = require('compression'),
     bodyParser = require('body-parser'),
     authentication = require('./authentication'),
+    authorization = require('./authorization'),
     ensureAuth = require('connect-ensure-login').ensureLoggedIn,
     users = require('./users'),
     startAttempts = 0,
+    DEFAULT_AUTH = 'regular',
     DEFAULT_PORT = 3000,
     DEFAULT_SSL_KEY_PATH = etc + 'ssl/server.key',
     DEFAULT_SSL_CERT_PATH = etc + 'ssl/server.crt',
@@ -40,6 +42,16 @@ app.post('/login', authentication.endpoints.login);
 app.put('/users/:id/password', [
     ensureAuth(LOGIN_PATH),     // ensure logged in
     users.endpoints.password    // changes passwords
+]);
+
+app.get('/users/:id', [
+    ensureAuth(LOGIN_PATH),
+    users.endpoints.get
+]);
+
+app.get('/users', [
+    ensureAuth(LOGIN_PATH),
+    users.endpoints.getAll
 ]);
 
 app.put('/users/:id', [
@@ -164,9 +176,17 @@ function logout(req, res) {
 
 function createUser(req, res, next) {
     users.find(req.body.username).then(function foundUser() {
-        // handled elsewhere
+        // if the user exists, they must be logged in, handle that
+        // further down the pipe
         next(req, res);
     }, function () {
+        // if the user wants to make a super user, handle that when they're
+        // logged in, further down the pipe
+        if (authorization.validate(req.body.authority)  !== DEFAULT_AUTH) {
+            next(req, res);
+            return;
+        }
+        // otherwise make a regular user
         users.endpoints.create(req, res);
     });
 }

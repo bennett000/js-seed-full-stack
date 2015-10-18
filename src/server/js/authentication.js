@@ -71,13 +71,11 @@ function logoutUser(req, res, next) {
 }
 
 function serializeUser(user, cb) {
-    console.log('serialize user', user);
     cb(null, user.id);
 }
 
-function deserializeUser(email, cb) {
-    console.log('deserialize user', email);
-    users.find(email).then(function (user) {
+function deserializeUser(id, cb) {
+    users.find(id).then(function (user) {
         cb(null, user);
     }, cb);
 }

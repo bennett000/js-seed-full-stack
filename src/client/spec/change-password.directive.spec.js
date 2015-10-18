@@ -17,6 +17,12 @@ describe('Change Password Directive', function () {
                     d.resolve(changePassResults);
                     return d.promise;
                 };
+                this.user = function getUser() {
+                    return {
+                        id: 'blah',
+                        authority: 'regular'
+                    };
+                };
             });
         });
     });

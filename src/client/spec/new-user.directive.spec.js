@@ -24,6 +24,12 @@ describe('mcNewUser Directive', function () {
                     }
                     return d.promise;
                 };
+                this.user = function user() {
+                    return {
+                        id: 'blah',
+                        authority: 'regular'
+                    };
+                };
             });
         });
     });

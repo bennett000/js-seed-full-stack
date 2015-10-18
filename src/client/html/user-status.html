@@ -1,0 +1,14 @@
+<ul class="mc-user-status">
+    <li ng-if="user">
+        <a href="#/logout" title="log out of Meal Calories"></a>
+    </li>
+    <li ng-if="!user">
+        <a href="#/login"
+           title="login to Meal Calories">Login</a> or
+        <a href="#/sign-up" title="sign up for Meal Calories">Sign
+            Up</a>
+    </li>
+    <li ng-if="user && user.authority != 'regular'">
+        <a href="#/users" title="Meal Calories users">Manage Users</a>
+    </li>
+</ul>

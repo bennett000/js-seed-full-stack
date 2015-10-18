@@ -31,14 +31,17 @@
         this.newUser = newUser;
         this.changePassword = changePassword;
         this.user = accessUser;
+        this.onUpdate = onUpdate;
 
-        var loggedInUser = null, initDefer = $q.defer(),
+        var updateListeners = Object.create(null),
+            loggedInUser = null, initDefer = $q.defer(),
             USER_KEY = 'user';
 
         this.initPromise = initDefer.promise;
 
         sessionStorage.get(USER_KEY).then(function (user) {
             loggedInUser = user;
+            notify('login');
             initDefer.resolve();
         }, function () {
             initDefer.resolve();
@@ -48,6 +51,7 @@
             $http.get('/logout').then(function () {
                 return sessionStorage.remove(USER_KEY).then(function () {
                     loggedInUser = null;
+                    notify('logout');
                     $location.path('/login');
                 });
             });
@@ -82,7 +86,7 @@
             user = validateUser(user);
             return $http.post('/login', user).then(function (result) {
                 loggedInUser = result.data;
-                console.log('log in');
+                notify('login');
                 return sessionStorage.set(USER_KEY, loggedInUser).
                     then(function () {
                         $location.path('/');
@@ -166,6 +170,28 @@
                     }
                     return {error: error};
                 });
+        }
+
+        function notify(status) {
+            Object.keys(updateListeners).forEach(function (id) {
+                updateListeners[id].call(null, status);
+            });
+        }
+
+        /**
+         * @param {function(...)} fn
+         * @returns {function(...)}
+         */
+        function onUpdate(fn) {
+            if (!angular.isFunction(fn)) {
+                return angular.noop;
+            }
+            var id = +Date.now().toString(16) + Math.random();
+            updateListeners[id] = fn;
+            function destroy() {
+                delete updateListeners[id];
+            }
+            return destroy;
         }
     }
 

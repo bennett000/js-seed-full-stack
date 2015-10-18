@@ -3,17 +3,30 @@
 
 describe('Users interface', function () {
     var users = require('../js/users'),
-        testUser1, testUser2;
+        testUser1, testUser2, testUser3, testUser4;
 
     beforeEach(function () {
         testUser1 = {id: 'test', password: '123'};
         testUser2 = {id: 'test2', password: '1234'};
+        testUser3 = {id: 'test3', password: '12345'};
+        testUser4 = {id: 'test4', password: '123456'};
     });
 
     it('createUser should resolve a new user object *without* a password field',
         function (done) {
             users.create(testUser1).then(function (newU) {
                 expect(testUser1.password).toBeUndefined();
+                done();
+            }, function (err) {
+                expect(err).toBeUndefined();
+                done();
+            });
+        });
+
+    it('createUser should resolve a new user object *with* an authority field',
+        function (done) {
+            users.create(testUser4).then(function (newU) {
+                expect(newU.authority).toBe('regular');
                 done();
             }, function (err) {
                 expect(err).toBeUndefined();
