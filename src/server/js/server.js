@@ -11,6 +11,7 @@ var express = require('express'),
     authorization = require('./authorization'),
     ensureAuth = require('connect-ensure-login').ensureLoggedIn,
     users = require('./users'),
+    meals = require('./meals'),
     startAttempts = 0,
     DEFAULT_AUTH = 'regular',
     DEFAULT_PORT = 3000,
@@ -58,6 +59,21 @@ app.put('/users/:id', [
     createUser,               // create user if it does *not* exist
     ensureAuth(LOGIN_PATH),   // ensure logged in
     users.endpoints.update]); // update user
+
+app.get('/meals/:id', [
+    ensureAuth(LOGIN_PATH),
+    meals.endpoints.get
+]);
+
+app.get('/meals', [
+    ensureAuth(LOGIN_PATH),
+    meals.endpoints.getAll
+]);
+
+app.put('/meals/:id', [
+    createUser,               // create user if it does *not* exist
+    ensureAuth(LOGIN_PATH),   // ensure logged in
+    meals.endpoints.update]); // update user
 
 app.get('/logout', [
     ensureAuth(LOGIN_PATH),          // log out only if logged in
