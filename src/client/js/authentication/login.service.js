@@ -64,7 +64,7 @@
         /**
          * @param {*} user
          * @returns {{ username: string, password: string,
-         passwordNew: string= }}
+         passwordNew: string=, authority: string= }}
          */
         function validateUser(user) {
             /*global Hashes*/
@@ -74,6 +74,9 @@
             reqUser.password = clientSideHash(user.password);
             if (user.passwordNew) {
                 reqUser.passwordNew = clientSideHash(user.passwordNew);
+            }
+            if (user.authority) {
+                reqUser.authority = user.authority;
             }
             return reqUser;
         }
@@ -123,7 +126,7 @@
 
         /**
          * @param {{ username: string, password: string,
-         * passwordConfirm: string }} user
+         * passwordConfirm: string, authority: string }} user
          * @returns {$q.promise}
          */
         function newUser(user) {

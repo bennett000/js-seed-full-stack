@@ -11,7 +11,14 @@
     function userDirective(users) {
 
         function linkFn(scope) {
-            scope.user = users.users[scope.mcId];
+            var destroy = users.onUpdate(update);
+
+            scope.$on('$destroy', destroy);
+            update();
+
+            function update() {
+                scope.user = users.users[scope.mcId];
+            }
         }
 
         return {

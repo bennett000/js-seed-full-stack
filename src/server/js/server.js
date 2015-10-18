@@ -178,12 +178,13 @@ function createUser(req, res, next) {
     users.find(req.body.username).then(function foundUser() {
         // if the user exists, they must be logged in, handle that
         // further down the pipe
-        next(req, res);
+        next();
     }, function () {
         // if the user wants to make a super user, handle that when they're
         // logged in, further down the pipe
         if (authorization.validate(req.body.authority)  !== DEFAULT_AUTH) {
-            next(req, res);
+            console.log('move along');
+            next();
             return;
         }
         // otherwise make a regular user

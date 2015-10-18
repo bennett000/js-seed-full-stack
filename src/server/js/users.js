@@ -3,6 +3,7 @@
 /*global require, module*/
 
 var users = Object.create(null),
+    config = require('../../../etc/config'),
     passwords = require('./passwords'),
     authorities = require('./authorities'),
     auth = require('./authorization'),
@@ -28,7 +29,8 @@ function init() {
         createUser({
             id: 'root',
             authority: authorities.ADM,
-            password: new hash.SHA256().b64('password')
+            password: new hash.SHA256().b64('password'),
+            expectedCalories: config.defaultCaloriesPerDay
         });
     }
 }
@@ -55,7 +57,8 @@ function validateCreateUser(user) {
 }
 
 /**
- * @param {{ id: string, password: string, authority: authority }} user
+ * @param {{ id: string, password: string, authority: authority,
+ expectedCalories: number }} user
  * @returns {Q.Promise}
  */
 function createUser(user) {
@@ -75,7 +78,9 @@ function createUser(user) {
         // create a _new_ user object
         users[user.id] = {
             id: user.id,
-            authority: results[1].authority
+            authority: results[1].authority,
+            expectedCalories: user.expectedCalories ||
+            config.defaultCaloriesPerDay
         };
         d.resolve(users[user.id]);
     });
@@ -124,8 +129,10 @@ function updateUserEndpoint_(req, res) {
     var id = req.body.username,
         authority = req.body.authority;
 
-    find(id).then(function () {
+    find(id).then(function (found) {
         return authorities.change(id, authority).then(function () {
+            found.expectedCalories = +req.body.expectedCalories ||
+                found.expectedCalories;
             res.sendStatus(200);
         });
     }, function () {
@@ -133,7 +140,8 @@ function updateUserEndpoint_(req, res) {
         return createUser({
             id:id,
             password:password,
-            authority:authority
+            authority:authority,
+            expectedCalories: config.defaultCaloriesPerDay
         }).then(function (user) {
             res.json(user);
         });
@@ -147,7 +155,7 @@ function updateUserEndpoint(req, res) {
         authority = req.body.authority;
 
     // no authority
-    if (auth.lt(authority < req.user.authority)) {
+    if (auth.lessThan(authority < req.user.authority)) {
         res.sendStatus(401);
         return;
     }
@@ -157,7 +165,7 @@ function updateUserEndpoint(req, res) {
         return;
     }
     // greater thans can edit anyone, and people can demote themselves
-    if (req.user.authority > authority) {
+    if (auth.greaterThan(req.user.authority, authority)) {
         updateUserEndpoint_(req, res);
         return;
     }
@@ -177,12 +185,12 @@ function getUser(req, res) {
             return;
         }
         // underlings cannot see overlings
-        if (req.user.authority < user.authority) {
+        if (auth.lessThan(req.user.authority, user.authority)) {
             res.status(401).json({ error: 'Not Authorized' });
             return;
         }
         // overlings can see underlings
-        if (req.user.authority > user.authority) {
+        if (auth.greaterThan(req.user.authority, user.authority)) {
             res.json(user);
             return;
         }

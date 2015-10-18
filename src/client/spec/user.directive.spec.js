@@ -9,7 +9,8 @@ describe('mcUser Directive', function () {
         module('MealCalories');
 
         module(function ($provide) {
-            $provide.service('users', function ($q) {
+            $provide.service('users', function ($q, makeOnUpdate) {
+                makeOnUpdate(this);
                 this.users = {};
             });
         });

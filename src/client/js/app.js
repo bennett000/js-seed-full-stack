@@ -77,6 +77,15 @@
                     initAuthorityManager: checkAuthorityManager
                 }
             })
+            .when('/user', {
+                template: '<mc-user-status></mc-user-status>' +
+                '<mc-user mc-id="currentUser.id"></mc-user>',
+                controller: 'CurrentUser',
+                resolve: {
+                    initLogin: checkMcLoginInit,
+                    initAuthorityManager: checkAuthorityManager
+                }
+            })
             .otherwise({
                 template: '<mc-user-status></mc-user-status>Welcome',
                 resolve: {

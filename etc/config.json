@@ -1,5 +1,6 @@
 {
   "port":3000,
+  "defaultCaloriesPerDay":1500,
   "sessionSecret":"superkalafragalisticexpialadocious",
   "sessionCookieName":"meal-calories.sid",
   "ssl": {

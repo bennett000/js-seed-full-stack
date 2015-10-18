@@ -1,0 +1,7 @@
+<div class="mc-authority-field">
+    <label ng-if="currentUser">Authority</label>
+    <select ng-if="currentUser" ng-model="ngModel.authority">
+        <option ng-repeat="a in authorities" value="{{ a }}">{{ a }}
+        </option>
+    </select>
+</div>

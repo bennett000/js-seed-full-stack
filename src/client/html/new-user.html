@@ -21,13 +21,7 @@
                mc-compare-to="user.password"
                required/>
     </div>
-    <div class="mc-authority-field" ng-if="currentUser">
-        <label for="authority">Authority</label>
-        <select id="authority" ng-model="user.authority">
-            <option ng-repeat="a in authorities" value="{{ a }}">{{ a }}
-            </option>
-        </select>
-    </div>
+    <mc-auth-select ng-model="user"></mc-auth-select>
     <div class="mc-new-user-button">
         <input id="mc-button-sign-up" type="submit" ng-click="newUser(user)"
                value="Sign Up"/>
