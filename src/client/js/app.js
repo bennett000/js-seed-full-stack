@@ -69,6 +69,13 @@
                     initLogin: checkMcLoginInit
                 }
             })
+            .when('/meals', {
+                template: '<mc-user-status></mc-user-status>' +
+                '<mc-meals></mc-meals>',
+                resolve: {
+                    initLogin: checkMcLoginInit
+                }
+            })
             .when('/users', {
                 template: '<mc-user-status></mc-user-status>' +
                 '<mc-users></mc-users>',

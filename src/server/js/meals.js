@@ -11,8 +11,9 @@ module.exports = {
     create: createMeal,
     change: changeMeal,
     endpoints: {
+        get: getMeal,
         getAll: getAllMeals,
-        change: changeEndpoint,
+        update: changeEndpoint,
         create: createEndpoint
     }
 };
@@ -100,6 +101,23 @@ function changeMeal(userId, meal) {
     });
 }
 
+function getMeal(req, res) {
+    var result;
+    find(req.param.id).then(function (meal) {
+        if (req.user.authority === authorities.ADM) {
+            res.json(meal);
+        } else {
+            if (req.user.id === meal.userId) {
+                res.json(meal);
+            } else {
+                res.sendStatus(401);
+            }
+        }
+    }, function (err) {
+        res.status(500).json({ error: err.message });
+    });
+}
+
 function getAllMeals(req, res) {
     var result;
     if (req.user.authority === authorities.ADM) {
@@ -128,8 +146,14 @@ function getAllMeals(req, res) {
 }
 
 function changeEndpoint(req, res) {
+    var id = req.body.id;
+    if (!id || (id === 'new') || !meals[id]) {
+        createEndpoint(req, res);
+        return;
+    }
+
     changeMeal(req.user.id, validateMeal({
-        id: req.body.id,
+        id: id,
         userId: req.user.id,
         timestamp: req.body.timestamp || +Date.now(),
         text: req.body.text + '',
@@ -142,12 +166,12 @@ function changeEndpoint(req, res) {
 }
 
 function createEndpoint(req, res) {
-    createMeal(req.user.id, validateMeal({
+    createMeal(req.user.id, {
         userId: req.user.id,
         timestamp: req.body.timestamp || +Date.now(),
         text: req.body.text + '',
         calories: +req.body.calories
-    })).then(function (meal) {
+    }).then(function (meal) {
         res.json(meal);
     }, function (err) {
         res.status(500).json({error: err.message});

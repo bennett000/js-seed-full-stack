@@ -71,7 +71,6 @@ app.get('/meals', [
 ]);
 
 app.put('/meals/:id', [
-    createUser,               // create user if it does *not* exist
     ensureAuth(LOGIN_PATH),   // ensure logged in
     meals.endpoints.update]); // update user
 

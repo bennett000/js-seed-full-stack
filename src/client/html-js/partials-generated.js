@@ -41,6 +41,30 @@ try {
   module = angular.module('MealCalories', []);
 }
 module.run(['$templateCache', function($templateCache) {
+  $templateCache.put('html/meal.html',
+    '<form><input type="text" ng-model="meal.text"> <input type="date" ng-model="meal.timestamp"> <input type="time" ng-model="meal.timestamp"> <input type="text" ng-model="meal.calories"> <input type="submit" ng-click="save(meal)" value="save"></form>');
+}]);
+})();
+
+(function(module) {
+try {
+  module = angular.module('MealCalories');
+} catch (e) {
+  module = angular.module('MealCalories', []);
+}
+module.run(['$templateCache', function($templateCache) {
+  $templateCache.put('html/meals.html',
+    '<ul><li ng-repeat="meal in meals"><mc-meal meal="meal"></mc-meal></li></ul>');
+}]);
+})();
+
+(function(module) {
+try {
+  module = angular.module('MealCalories');
+} catch (e) {
+  module = angular.module('MealCalories', []);
+}
+module.run(['$templateCache', function($templateCache) {
   $templateCache.put('html/new-user.html',
     '<form novalidate="" class="mc-new-user-form"><div class="mc-new-user-error" ng-show="result.error">{{ result.error }}</div><div class="mc-new-user-success" ng-show="result.success">{{ result.success }}</div><div class="mc-username-field"><label for="username">Username</label> <input type="text" id="username" ng-model="user.username" required=""></div><div class="mc-password-field"><label for="password">Password</label> <input type="password" id="password" ng-model="user.password" required=""></div><div class="mc-password-field"><label for="passwordConfirm">Confirm Password</label> <input type="password" id="passwordConfirm" ng-model="user.passwordConfirm" mc-compare-to="user.password" required=""></div><mc-auth-select ng-model="user"></mc-auth-select><div class="mc-new-user-button"><input id="mc-button-sign-up" type="submit" ng-click="newUser(user)" value="Sign Up"></div></form>');
 }]);
