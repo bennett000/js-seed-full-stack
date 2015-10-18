@@ -11,7 +11,7 @@
         return {
             restrict: 'E',
             replace: true,
-            template: '<div class="mc-main" ng-view="">Hello World!</div>'
+            template: '<div class="mc-main" ng-view=""></div>'
         };
     }
 }());

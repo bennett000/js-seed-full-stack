@@ -21,7 +21,7 @@ function ChangePassword() {
     this.submit = clickSubmit;
     this.successText = successText;
     this.success = EC.textToBePresentInElement($('.mc-change-password-success'),
-        'Password Changed');
+        'Password Changed... Logging Out...');
 
     function init(){
         return browser.get(env.url() + '#/password');

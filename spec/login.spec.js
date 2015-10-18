@@ -60,8 +60,7 @@ describe('Login, and Password Functions', function () {
         change.passwordConfirm(pass1_2);
         change.submit();
 
-        browser.wait(change.success, 5000);
-        expect(change.successText()).toBeTruthy();
+        browser.wait(utils.urlChanged(env.url() + '/#/password'), 5000);
     });
 
     //it('Should logout', function () {

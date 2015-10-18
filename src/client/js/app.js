@@ -67,14 +67,14 @@
                 }
             })
             .when('/users', {
-                template: '<div>USERS</div>',
+                template: '<mc-user-status></mc-user-status><div>USERS</div>',
                 resolve: {
                     initLogin: checkMcLoginInit,
                     initAuthorityManager: checkAuthorityManager
                 }
             })
             .otherwise({
-                template: 'Welcome',
+                template: '<mc-user-status></mc-user-status>Welcome',
                 resolve: {
                     initLogin: checkMcLoginInit
                 }

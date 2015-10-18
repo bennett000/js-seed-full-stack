@@ -13,7 +13,7 @@
             var onUpdate;
             scope.user = null;
 
-            mcLogin.init().then(update);
+            mcLogin.initPromise.then(update);
             onUpdate = mcLogin.onUpdate(update);
             scope.$on('$destory', destroy);
 

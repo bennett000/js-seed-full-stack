@@ -9,7 +9,7 @@
     /**
      * @ngInject
      */
-    function mcChangePassword(mcLogin, $location) {
+    function mcChangePassword(mcLogin, $location, $timeout) {
 
         function linkFn(scope) {
             if (!mcLogin.user()) {
@@ -25,14 +25,18 @@
                 error: '',
                 success: null
             };
-            scope.changePassword = function newUser(user) {
+            scope.changePassword = function changePassword(user) {
                 mcLogin.changePassword(user).then(function (result) {
                     if (result.error) {
                         scope.result.error = result.error;
                         scope.result.success = null;
                     } else {
                         scope.result.error = '';
-                        scope.result.success = 'Password Changed';
+                        scope.result.success = 'Password Changed... ' +
+                        'Logging Out...';
+                        $timeout(function () {
+                            $location.path('/logout');
+                        }, 2500);
                     }
                 });
             };

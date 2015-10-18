@@ -29,8 +29,10 @@
             if (scope.currentUser) {
                 if (scope.currentUser.authority === 'admin') {
                     scope.authorities = allAuthorities;
-                } else {
+                } else if (scope.currentUser.authority === 'manager') {
                     scope.authorities = mgrAuthorities;
+                } else {
+                    scope.authorities = regAuthorities;
                 }
             } else {
                 scope.authorities = regAuthorities;

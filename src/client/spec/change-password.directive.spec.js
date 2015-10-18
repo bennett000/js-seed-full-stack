@@ -5,7 +5,8 @@ describe('Change Password Directive', function () {
 
     var $compile, $rootScope, changePassResults = {},
         expectedText1 = 'Password New Password Confirm Password',
-        changedText1 = 'Password Changed' + expectedText1;
+        changedText1 = 'Password Changed... Logging Out...' +
+            expectedText1;
 
     beforeEach(function () {
         module('MealCalories');
