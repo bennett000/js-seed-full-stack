@@ -7,10 +7,11 @@
 
     /**
      * @ngInject
+     * @param {$location} $location
      * @param {mcLogin} mcLogin
      * @param {users} users
      */
-    function mcNewUserDirective(mcLogin, users) {
+    function mcNewUserDirective($location, mcLogin, users) {
 
         function linkFn(scope) {
             scope.user = {
@@ -31,6 +32,7 @@
                         scope.result.error = '';
                         scope.result.success = 'User Created';
                         users.notify();
+                        $location.path('/login');
                     }
                 }, function (err) {
                     resultError(err.message);

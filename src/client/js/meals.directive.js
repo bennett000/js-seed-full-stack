@@ -63,10 +63,8 @@
 
             function clearFilter() {
                 if (mcLogin.user() && mcLogin.user().authority === 'regular') {
-                    console.log('regular', mcLogin.user());
                     scope.user.isSuper = false;
                 } else {
-                    console.log('super', mcLogin.user());
                     scope.user.isSuper = true;
                 }
 
@@ -212,17 +210,14 @@
             }
 
             function doFilterOwn(meal) {
-                console.log('dfo');
                 var user = mcLogin.user();
                 if (!scope.user.own) {
-                    console.log('dfo no own');
                     return false;
                 }
                 if (!user) {
                     return true;
                 }
                 if (user.id === meal.userId) {
-                    console.log('dfo match');
                     return false;
                 }
                 return true;
