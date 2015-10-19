@@ -29,7 +29,8 @@
                 if (!angular.isFunction(fn)) {
                     return angular.noop;
                 }
-                var id = +Date.now().toString(16) + Math.random();
+                var id = +Date.now();
+                id = id.toString(16) + Math.random();
                 updateListeners[id] = fn;
                 function destroy() {
                     delete updateListeners[id];

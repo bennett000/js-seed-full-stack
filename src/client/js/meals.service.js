@@ -29,7 +29,7 @@
                     });
                     that.notify('update');
                 } else {
-                    $log.error('Meals: Unexpected Data');
+                    $log.error('Meals: Unexpected Data', results.data);
                 }
             });
         }
