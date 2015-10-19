@@ -16,6 +16,7 @@
 
         var that = makeOnUpdate(this);
         this.users = {};
+        this.change = change;
         mcLogin.onUpdate(update);
         update();
 
@@ -31,6 +32,18 @@
                     $log.error('Users: Unexpected Data');
                 }
             });
+        }
+
+        function change(user) {
+            if (!user.id) {
+                return;
+            }
+            var put = {
+                id : user.id,
+                username : user.id,
+                expectedCalories: +user.expectedCalories
+            };
+            $http.put('/users/' + user.id, put);
         }
     }
 

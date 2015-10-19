@@ -7,17 +7,27 @@
     /**
      * @ngInject
      * @param {users} users
+     * @param {mcLogin} mcLogin
      */
-    function userDirective(users) {
+    function userDirective(users, mcLogin) {
 
         function linkFn(scope) {
             var destroy = users.onUpdate(update);
 
             scope.$on('$destroy', destroy);
             update();
+            scope.save = save;
+
+            if (mcLogin.user().authority !== 'regular') {
+                scope.isSuper = true;
+            }
 
             function update() {
                 scope.user = users.users[scope.mcId];
+            }
+
+            function save(user) {
+                users.change(user);
             }
         }
 

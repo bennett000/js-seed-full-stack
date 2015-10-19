@@ -12,4 +12,7 @@
     <li ng-if="user && user.authority != 'regular'">
         <a href="#/users" title="Meal Calories users">Manage Users</a>
     </li>
+    <li ng-if="user">
+        <a href="#/user" title="Home">Home/Settings</a>
+    </li>
 </ul>

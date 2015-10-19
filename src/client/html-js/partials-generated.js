@@ -29,6 +29,18 @@ try {
   module = angular.module('MealCalories', []);
 }
 module.run(['$templateCache', function($templateCache) {
+  $templateCache.put('html/home.html',
+    '<div class="mc-page mc-users"><div class="col-1-2">Username:</div><div class="col-1-2">{{ currentUser.id }}</div><div class="col-1-2">Expected Calories:</div><input type="text" class="col-1-2" ng-model="currentUser.expectedCalories"> <input type="button" value="Save" ng-click="save(currentUser)"><br><a href="#/" title="Meals">Back To Meals</a></div>');
+}]);
+})();
+
+(function(module) {
+try {
+  module = angular.module('MealCalories');
+} catch (e) {
+  module = angular.module('MealCalories', []);
+}
+module.run(['$templateCache', function($templateCache) {
   $templateCache.put('html/login.html',
     '<form novalidate="" class="mc-login-form"><div class="mc-login-error" ng-show="result.error">{{ result.error }}</div><div><label for="username" class="col-1-2">Username</label> <input type="text" class="col-1-2" id="username" ng-model="user.username" required=""> <label for="password" class="col-1-2">Password</label> <input type="password" class="col-1-2" id="password" ng-model="user.password" required=""></div><input id="mc-button-login" type="submit" ng-click="login(user)" value="Login"> <a class="mc-login-new-user-link" href="/#/sign-up" title="Create New User">Create New User</a></form>');
 }]);
@@ -78,7 +90,7 @@ try {
 }
 module.run(['$templateCache', function($templateCache) {
   $templateCache.put('html/user-status.html',
-    '<ul class="mc-user-status"><li ng-if="user"><a href="#/logout" title="log out of Meal Calories">Log Out</a> <a href="#/password" title="Change Password">Change Password</a></li><li ng-if="!user"><a href="#/login" title="login to Meal Calories">Login</a> or <a href="#/sign-up" title="sign up for Meal Calories">Sign Up</a></li><li ng-if="user && user.authority != \'regular\'"><a href="#/users" title="Meal Calories users">Manage Users</a></li></ul>');
+    '<ul class="mc-user-status"><li ng-if="user"><a href="#/logout" title="log out of Meal Calories">Log Out</a> <a href="#/password" title="Change Password">Change Password</a></li><li ng-if="!user"><a href="#/login" title="login to Meal Calories">Login</a> or <a href="#/sign-up" title="sign up for Meal Calories">Sign Up</a></li><li ng-if="user && user.authority != \'regular\'"><a href="#/users" title="Meal Calories users">Manage Users</a></li><li ng-if="user"><a href="#/user" title="Home">Home/Settings</a></li></ul>');
 }]);
 })();
 
@@ -90,7 +102,7 @@ try {
 }
 module.run(['$templateCache', function($templateCache) {
   $templateCache.put('html/user.html',
-    '<div><div>{{ user.id }}</div><form><input type="text" ng-model="user.expectedCalories" value="{{ user.expectedCaloreis }}"></form><div>{{ user.authority }}</div></div>');
+    '<div><div class="col-1-5">{{ user.id }}</div><input class="col-1-5" type="text" ng-model="user.expectedCalories" value="{{ user.expectedCaloreis }}"><div class="col-1-5" ng-if="isSuper"><mc-auth-select ng-model="user"></mc-auth-select></div><div class="col-1-5" ng-if="!isSuper"><div>{{ user.authority }}</div></div><input class="col-1-5" type="button" ng-click="save(user)" value="Save"></div>');
 }]);
 })();
 
@@ -102,7 +114,7 @@ try {
 }
 module.run(['$templateCache', function($templateCache) {
   $templateCache.put('html/users.html',
-    '<ul><li ng-repeat="user in users"><mc-user mc-id="user.id"></mc-user></li></ul>');
+    '<div class="mc-users"><ul><li ng-repeat="user in users"><mc-user mc-id="user.id"></mc-user></li></ul></div>');
 }]);
 })();
 

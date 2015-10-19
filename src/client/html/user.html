@@ -1,9 +1,14 @@
 <div>
-    <div>{{ user.id }}</div>
-    <form>
-        <input type="text" ng-model="user.expectedCalories"
-               value="{{ user.expectedCaloreis }}"/>
+    <div class="col-1-5">{{ user.id }}</div>
+    <input class="col-1-5" type="text" ng-model="user.expectedCalories"
+           value="{{ user.expectedCaloreis }}"/>
 
-    </form>
-    <div>{{ user.authority }}</div>
+    <div class="col-1-5" ng-if="isSuper">
+        <mc-auth-select ng-model="user"></mc-auth-select>
+    </div>
+    <div class="col-1-5" ng-if="!isSuper">
+        <div>{{ user.authority }}</div>
+    </div>
+    <input class="col-1-5" type="button" ng-click="save(user)" value="Save"/>
+
 </div>

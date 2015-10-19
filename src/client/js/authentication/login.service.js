@@ -32,6 +32,7 @@
         this.newUser = newUser;
         this.changePassword = changePassword;
         this.user = accessUser;
+        this.updateSessionUser = updateSessionUser;
 
         var that = makeOnUpdate(this),
             loggedInUser = null, initDefer = $q.defer(),
@@ -79,6 +80,11 @@
                 reqUser.authority = user.authority;
             }
             return reqUser;
+        }
+
+        function updateSessionUser(usr) {
+            loggedInUser.expectedCalories = +usr.expectedCalories;
+            return sessionStorage.set(USER_KEY, loggedInUser);
         }
 
         /**

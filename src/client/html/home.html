@@ -1,0 +1,9 @@
+<div class="mc-page mc-users">
+    <div class="col-1-2">Username:</div>
+    <div class="col-1-2">{{ currentUser.id }}</div>
+    <div class="col-1-2">Expected Calories:</div>
+    <input type="text" class="col-1-2" ng-model="currentUser.expectedCalories" />
+    <input type="button" value="Save" ng-click="save(currentUser)"/>
+    <br/>
+    <a href="#/" title="Meals">Back To Meals</a>
+</div>

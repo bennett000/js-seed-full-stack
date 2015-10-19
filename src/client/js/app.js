@@ -86,12 +86,10 @@
                 }
             })
             .when('/user', {
-                template: '<mc-user-status></mc-user-status>' +
-                '<mc-user class="mc-page" mc-id="currentUser.id"></mc-user>',
+                templateUrl: 'html/home.html',
                 controller: 'CurrentUser',
                 resolve: {
-                    initLogin: checkMcLoginInit,
-                    initAuthorityManager: checkAuthorityManager
+                    initLogin: checkMcLoginInit
                 }
             })
             .otherwise({

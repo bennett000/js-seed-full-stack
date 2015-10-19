@@ -198,5 +198,8 @@ html, body {
 .mc-welcome-options {
   float: right; }
 
+.mc-users {
+  color: #e7ffec; }
+
 .mc_invalid {
   background-color: #ff3852 !important; }

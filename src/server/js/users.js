@@ -131,8 +131,10 @@ function updateUserEndpoint_(req, res) {
 
     find(id).then(function (found) {
         return authorities.change(id, authority).then(function () {
+            console.log('save');
             found.expectedCalories = +req.body.expectedCalories ||
                 found.expectedCalories;
+            console.log('found', found);
             res.sendStatus(200);
         });
     }, function () {
@@ -153,7 +155,7 @@ function updateUserEndpoint_(req, res) {
 function updateUserEndpoint(req, res) {
     var id = req.body.username,
         authority = req.body.authority;
-
+console.log('update');
     // no authority
     if (auth.lessThan(authority < req.user.authority)) {
         res.sendStatus(401);
