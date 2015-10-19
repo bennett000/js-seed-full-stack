@@ -51,18 +51,31 @@
 
         function linkFn(scope) {
             var destroyUpdate = meals.onUpdate(update);
-            clearFilter();
             update();
             scope.$on('$destroy', destroyUpdate);
             scope.filter = filter;
             scope.clearFilter = clearFilter;
+            scope.user = {
+                own: true,
+                isSuper: false
+            };
+            clearFilter();
 
             function clearFilter() {
+                if (mcLogin.user() && mcLogin.user().authority === 'regular') {
+                    console.log('regular', mcLogin.user());
+                    scope.user.isSuper = false;
+                } else {
+                    console.log('super', mcLogin.user());
+                    scope.user.isSuper = true;
+                }
+
                 scope.startDate = null;
                 scope.endDate = null;
                 scope.startTime = null;
                 scope.endTime = null;
                 scope.invalid = {};
+                scope.user.own = true;
                 update();
             }
 
@@ -86,9 +99,14 @@
 
             function update() {
                 scope.meals = Object.keys(meals.meals).map(function (id) {
+                    if (doFilterOwn(meals.meals[id])) {
+                        return null;
+                    }
                     meals.meals[id].timestamp =
                         new Date(meals.meals[id].timestamp);
                     return meals.meals[id];
+                }).filter(function (el) {
+                    return el;
                 });
 
 
@@ -174,18 +192,40 @@
                 if (!validateDateTimePairs(dstart, dend, tstart, tend)) {
                     return false;
                 }
-                if (dstart.getTime() > dend.getTime()) {
-                    scope.invalid.dstart = true;
-                    valid = false;
-                } else {
-                    scope.invalid.dstart = false;
-                }
-                if (tstart && tend) {
-                    if (!validateTimes(tstart, tend)) {
+                if (!(!dstart && !dend)) {
+                    if (dstart.getTime() > dend.getTime()) {
+                        scope.invalid.dstart = true;
                         valid = false;
+                    } else {
+                        scope.invalid.dstart = false;
+                    }
+
+                }
+                if (!(!tstart && !tend)) {
+                    if (tstart && tend) {
+                        if (!validateTimes(tstart, tend)) {
+                            valid = false;
+                        }
                     }
                 }
                 return valid;
+            }
+
+            function doFilterOwn(meal) {
+                console.log('dfo');
+                var user = mcLogin.user();
+                if (!scope.user.own) {
+                    console.log('dfo no own');
+                    return false;
+                }
+                if (!user) {
+                    return true;
+                }
+                if (user.id === meal.userId) {
+                    console.log('dfo match');
+                    return false;
+                }
+                return true;
             }
 
             function filter() {
@@ -200,6 +240,9 @@
 
                 scope.invalid = {};
                 scope.meals = Object.keys(meals.meals).map(function (id) {
+                    if (doFilterOwn(meals.meals[id])) {
+                        return null;
+                    }
                     var d = new Date(meals.meals[id].timestamp);
                     if (dstart && dend) {
                         if (!betweenDates(d, dstart, dend)) {
@@ -224,6 +267,7 @@
         return {
             restrict: 'E',
             replace: true,
+            scope: true,
             link: linkFn,
             templateUrl: 'html/meals.html'
         };

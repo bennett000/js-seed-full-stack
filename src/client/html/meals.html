@@ -1,20 +1,36 @@
-<ul class="mc-meals-form">
-    <li>Start <input ng-class="{mc_invalid: invalid.dstart}" type="date"
-        ng-model="startDate" ng-change="filter()" />
-        End <input ng-class="{mc_invalid: invalid.dend}" type="date"
-        ng-model="endDate" ng-change="filter()" />
-    </li>
-    <li>Start <input ng-class="{mc_invalid: invalid.tstart}" type="time"
-        ng-model="startTime" ng-change="filter()"/>
-    </li>
-    <li>End <input ng-class="{mc_invalid: invalid.tend}" type="time"
-        ng-model="endTime" ng-change="filter()"/>
-    </li>
-    <li><input type="button" value="clear filters" ng-click="clearFilter()"/>
-    </li>
-    <!--<li>Start <input type="time" ng-model="startTime" ng-change="filter()"/>-->
-    <!--End <input type="time" ng-model="endTime" ng-change="filter()"/></li>-->
-    <li ng-repeat="meal in meals">
-        <mc-meal meal="meal"></mc-meal>
-    </li>
-</ul>
+<div class="mc-meals">
+    <div class="meal-filters">
+        <div>
+            <div class="col-1-2">Between Dates</div>
+            <div class="col-1-2">Between Times</div>
+        </div>
+        <div>
+            <input id="meal-date-start" ng-class="{mc_invalid: invalid.dstart}"
+                   type="date" class="col-1-4"
+                   ng-model="startDate" ng-change="filter()"/>
+            <input id="meal-date-end" ng-class="{mc_invalid: invalid.dend}"
+                   type="date" class="col-1-4"
+                   ng-model="endDate" ng-change="filter()"/>
+            <input id="meal-time-start" ng-class="{mc_invalid: invalid.tstart}"
+                   type="time" class="col-1-5"
+                   ng-model="startTime" ng-change="filter()"/>
+            <input id="meal-time-end" ng-class="{mc_invalid: invalid.tend}"
+                   type="time" class="col-1-5"
+                   ng-model="endTime" ng-change="filter()"/>
+        </div>
+        <div>
+            <label ng-if="user.isSuper" for="own-meal-record"
+                   class="col-1-4">Own</label>
+            <input ng-if="user.isSuper" id="own-meal-record" class="col-1-4"
+                   type="checkbox" ng-model="user.own" ng-change="filter()"/>
+            <input type="button" class="col-1-4" value="clear filters"
+                   ng-click="clearFilter()"/>
+        </div>
+    </div>
+    <br/>
+    <ul class="mc-meals-form">
+        <li ng-repeat="meal in meals">
+            <mc-meal meal="meal"></mc-meal>
+        </li>
+    </ul>
+</div>

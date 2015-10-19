@@ -1,15 +1,25 @@
 @import "../modules/colours";
 
 .calories_too_many {
-  background-color: $red_calories;
+  background-color: $red_calories !important;
 }
 
 .calories_too_few {
-  background-color: $green_calories;
+  background-color: $green_calories !important;
+}
+
+.mc-meals {
+  color: $light_text;
 }
 
 .mc-meals-form {
-  color: $light_text;
+  position: relative;
+  top: 7%;
+}
+
+.meal-filters {
+  position: relative;
+  height: 80px;
 }
 
 .mc-meals-form input {

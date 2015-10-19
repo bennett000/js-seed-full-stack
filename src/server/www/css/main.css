@@ -109,6 +109,12 @@ html, body {
 .col-1-2 {
   width: 49.5%; }
 
+.col-1-4 {
+  width: 24.5%; }
+
+.col-1-4 {
+  widht: 19.5%; }
+
 .mc-page-login {
   position: absolute;
   top: 50%;
@@ -161,13 +167,21 @@ html, body {
   float: right; }
 
 .calories_too_many {
-  background-color: #ff4c4c; }
+  background-color: #ff4c4c !important; }
 
 .calories_too_few {
-  background-color: #2a8048; }
+  background-color: #2a8048 !important; }
+
+.mc-meals {
+  color: #e7ffec; }
 
 .mc-meals-form {
-  color: #e7ffec; }
+  position: relative;
+  top: 7%; }
+
+.meal-filters {
+  position: relative;
+  height: 80px; }
 
 .mc-meals-form input {
   background-color: #e7ffec; }

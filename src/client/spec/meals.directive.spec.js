@@ -4,7 +4,7 @@ describe('mcUsers Directive', function () {
     'use strict';
 
     var $compile, $rootScope,
-        expectedText1 = 'Start  End Start End';
+        expectedText1 = 'Between DatesBetween Times   Own';
 
     beforeEach(function () {
         module('MealCalories');
