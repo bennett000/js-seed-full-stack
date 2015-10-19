@@ -46,7 +46,7 @@
     function configRoutes($routeProvider) {
         $routeProvider
             .when('/login', {
-                template: '<mc-login></mc-login>',
+                template: '<mc-login class="mc-page"></mc-login>',
                 resolve: {
                     initLogin: checkMcLoginInit
                 }
@@ -58,27 +58,28 @@
                 }
             })
             .when('/sign-up', {
-                template: '<mc-new-user></mc-new-user>',
+                template: '<mc-new-user class="mc-page"></mc-new-user>',
                 resolve: {
                     initLogin: checkMcLoginInit
                 }
             })
             .when('/password', {
-                template: '<mc-change-password></mc-change-password>',
+                template: '<mc-change-password class="mc-page">' +
+                '</mc-change-password>',
                 resolve: {
                     initLogin: checkMcLoginInit
                 }
             })
             .when('/meals', {
                 template: '<mc-user-status></mc-user-status>' +
-                '<mc-meals></mc-meals>',
+                '<mc-meals class="mc-page"></mc-meals>',
                 resolve: {
                     initLogin: checkMcLoginInit
                 }
             })
             .when('/users', {
                 template: '<mc-user-status></mc-user-status>' +
-                '<mc-users></mc-users>',
+                '<mc-users class="mc-page"></mc-users>',
                 resolve: {
                     initLogin: checkMcLoginInit,
                     initAuthorityManager: checkAuthorityManager
@@ -86,7 +87,7 @@
             })
             .when('/user', {
                 template: '<mc-user-status></mc-user-status>' +
-                '<mc-user mc-id="currentUser.id"></mc-user>',
+                '<mc-user class="mc-page" mc-id="currentUser.id"></mc-user>',
                 controller: 'CurrentUser',
                 resolve: {
                     initLogin: checkMcLoginInit,
@@ -94,7 +95,9 @@
                 }
             })
             .otherwise({
-                template: '<mc-user-status></mc-user-status>Welcome',
+                templateUrl: 'html/welcome.html',
+                controller: 'Welcome',
+                controllerAs: 'welcome',
                 resolve: {
                     initLogin: checkMcLoginInit
                 }
@@ -119,6 +122,7 @@
         function success(response) {
             return response;
         }
+
         function error(response) {
             if (+response.status === 401) {
                 //AuthFactory.clearUser();
@@ -128,9 +132,11 @@
             // otherwise
             return $q.reject(response);
         }
+
         function interceptResolve(promise) {
             return promise.then(success, error);
         }
+
         return interceptResolve;
     }
 }());

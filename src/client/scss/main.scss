@@ -1,12 +1,12 @@
 @import "partials/base";
-@import "partials/reset";
 @import "partials/layout";
 @import "partials/login";
 @import "partials/new-user";
 @import "partials/change-password";
 @import "partials/meals";
+@import "partials/welcome";
 
 
 
 // these rules come last
-@import "partials/top-layer"
+@import "partials/top-layer";

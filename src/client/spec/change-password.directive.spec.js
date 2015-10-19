@@ -4,7 +4,7 @@ describe('Change Password Directive', function () {
     'use strict';
 
     var $compile, $rootScope, changePassResults = {},
-        expectedText1 = 'Password New Password Confirm Password',
+        expectedText1 = 'Password  New Password  Confirm Password',
         changedText1 = 'Password Changed... Logging Out...' +
             expectedText1;
 

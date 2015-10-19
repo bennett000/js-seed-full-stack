@@ -7,6 +7,13 @@ describe('mealCalorie Directive', function () {
 
     beforeEach(function () {
         module('MealCalories');
+
+        module(function ($provide) {
+            $provide.service('meals', function ($q, makeOnUpdate) {
+                makeOnUpdate(this);
+                this.meals = {};
+            });
+        });
     });
 
     beforeEach(inject(function (_$compile_, _$rootScope_) {

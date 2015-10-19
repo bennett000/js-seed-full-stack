@@ -4,7 +4,8 @@ describe('mcNewUser Directive', function () {
     'use strict';
 
     var $compile, $rootScope, newUserResults = {},
-        expectedText1 = 'Username Password Confirm Password Authorityregular',
+        expectedText1 = 'Username  Password  Confirm Password ' +
+            'AuthorityregularAlready Signed Up? Log In',
         updatedText1 = 'User Created' + expectedText1, newUserFail = false;
 
     beforeEach(function () {

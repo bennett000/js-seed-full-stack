@@ -6,23 +6,22 @@
         {{ result.success }}
     </div>
     <div class="mc-username-field">
-        <label for="username">Username</label>
-        <input type="text" id="username" ng-model="user.username" required/>
-    </div>
-    <div class="mc-password-field">
-        <label for="password">Password</label>
-        <input type="password" id="password" ng-model="user.password"
+        <label for="username" class="col-1-2">Username</label>
+        <input type="text" class="col-1-2" id="username"
+               ng-model="user.username" required/>
+        <label for="password" class="col-1-2">Password</label>
+        <input type="password" class="col-1-2" id="password"
+               ng-model="user.password"
                required/>
-    </div>
-    <div class="mc-password-field">
-        <label for="passwordConfirm">Confirm Password</label>
-        <input type="password" id="passwordConfirm"
+        <label for="passwordConfirm" class="col-1-2">Confirm Password</label>
+        <input type="password" class="col-1-2" id="passwordConfirm"
                ng-model="user.passwordConfirm"
                mc-compare-to="user.password"
                required/>
     </div>
     <mc-auth-select ng-model="user"></mc-auth-select>
     <div class="mc-new-user-button">
+        Already Signed Up? <a href="#/login" title="Login">Log In</a>
         <input id="mc-button-sign-up" type="submit" ng-click="newUser(user)"
                value="Sign Up"/>
     </div>

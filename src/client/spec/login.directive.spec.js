@@ -3,7 +3,8 @@
 describe('mcLogin Directive', function () {
     'use strict';
 
-    var $compile, $rootScope, loginResults = {};
+    var $compile, $rootScope, loginResults = {},
+        expectedText1 = 'Username  Password  Create New User';
 
     beforeEach(function () {
         module('MealCalories');
@@ -29,7 +30,7 @@ describe('mcLogin Directive', function () {
     it('compiles', inject(function () {
             var el = $compile('<mc-login></mc-login>')($rootScope);
             $rootScope.$digest();
-            expect(el.text().trim()).toBe('Username Password Create New User');
+            expect(el.text().trim()).toBe(expectedText1);
         }));
 
     it('shows error text on an invalid login', inject(function () {
@@ -38,7 +39,7 @@ describe('mcLogin Directive', function () {
         $rootScope.$digest(); // digest the compiled changes
         $rootScope.login();   // trigger the login
         $rootScope.$digest(); // digest the login's promise
-        expect(el.text().trim()).not.toBe('Username Password Create New User');
+        expect(el.text().trim()).not.toBe(expectedText1);
     }));
 
     it('hides error text on a valid login', inject(function () {
@@ -47,11 +48,11 @@ describe('mcLogin Directive', function () {
         $rootScope.$digest(); // digest the compiled changes
         $rootScope.login();   // trigger the login
         $rootScope.$digest(); // digest the login's promise
-        expect(el.text().trim()).not.toBe('Username Password Create New User');
+        expect(el.text().trim()).not.toBe(expectedText1);
         delete loginResults.error; // clear the error
         $rootScope.login();   // trigger the login
         $rootScope.$digest(); // digest the login's promise
-        expect(el.text().trim()).toBe('Username Password Create New User');
+        expect(el.text().trim()).toBe(expectedText1);
     }));
 
 });

@@ -3,7 +3,8 @@
 describe('mcUsers Directive', function () {
     'use strict';
 
-    var $compile, $rootScope;
+    var $compile, $rootScope,
+        expectedText1 = 'Start  End Start End';
 
     beforeEach(function () {
         module('MealCalories');
@@ -26,7 +27,7 @@ describe('mcUsers Directive', function () {
         inject(function () {
             var el = $compile('<mc-meals></mc-meals>')($rootScope);
             $rootScope.$digest();
-            expect(el.text().trim()).toBe('');
+            expect(el.text().trim()).toBe(expectedText1);
         }));
 
 });

@@ -1,3 +1,6 @@
+.mc-page-login {
+  @include centrer;
+}
 .mc-login-form {
   color: $light_text;
 }
@@ -12,4 +15,8 @@
 
 .mc-login-form input.ng-valid.ng-touched {
   background-color: $input_bg;
+}
+
+#mc-button-change-pass {
+  float: right;
 }
