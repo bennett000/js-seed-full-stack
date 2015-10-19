@@ -7,3 +7,20 @@
 .calories_too_few {
   background-color: $green_calories;
 }
+
+.mc-meals-form {
+  color: $light_text;
+}
+
+.mc-meals-form input {
+  background-color: $input_bg;
+}
+
+.mc-meals-form input.ng-invalid.ng-touched {
+  background-color: $red_invalid;
+}
+
+.mc-meals-form input.ng-valid.ng-touched {
+  background-color: $input_bg;
+}
+

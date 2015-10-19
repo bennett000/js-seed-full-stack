@@ -54,7 +54,7 @@ try {
 }
 module.run(['$templateCache', function($templateCache) {
   $templateCache.put('html/meals.html',
-    '<ul><li>Start <input type="date" ng-model="startDate" ng-change="filter()"> End <input type="date" ng-model="endDate" ng-change="filter()"></li><li ng-repeat="meal in meals"><mc-meal meal="meal"></mc-meal></li></ul>');
+    '<ul class="mc-meals-form"><li>Start <input ng-class="{mc_invalid: invalid.dstart}" type="date" ng-model="startDate" ng-change="filter()"> End <input ng-class="{mc_invalid: invalid.dend}" type="date" ng-model="endDate" ng-change="filter()"></li><li>Start <input ng-class="{mc_invalid: invalid.tstart}" type="time" ng-model="startTime" ng-change="filter()"></li><li>End <input ng-class="{mc_invalid: invalid.tend}" type="time" ng-model="endTime" ng-change="filter()"></li><li><input type="button" value="clear filters" ng-click="clearFilter()"></li><li ng-repeat="meal in meals"><mc-meal meal="meal"></mc-meal></li></ul>');
 }]);
 })();
 

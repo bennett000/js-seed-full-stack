@@ -90,3 +90,18 @@ html, body {
 
 .calories_too_few {
   background-color: #2a8048; }
+
+.mc-meals-form {
+  color: #e7ffec; }
+
+.mc-meals-form input {
+  background-color: #e7ffec; }
+
+.mc-meals-form input.ng-invalid.ng-touched {
+  background-color: #ff3852; }
+
+.mc-meals-form input.ng-valid.ng-touched {
+  background-color: #e7ffec; }
+
+.mc_invalid {
+  background-color: #ff3852 !important; }
