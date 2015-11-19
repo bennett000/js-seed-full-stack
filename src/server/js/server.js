@@ -12,6 +12,7 @@ var express = require('express'),
     ensureAuth = require('connect-ensure-login').ensureLoggedIn,
     users = require('./users'),
     meals = require('./meals'),
+    nodePath = require('path'),
     startAttempts = 0,
     DEFAULT_AUTH = 'regular',
     DEFAULT_PORT = 3000,
@@ -33,7 +34,9 @@ if (config.compression) {
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express['static']('./www'));
+app.use(express['static'](
+    nodePath.normalize(__dirname + nodePath.sep + '..' + nodePath.sep + 'www'))
+);
 
 authentication.init(app);
 

@@ -41,6 +41,7 @@ gulp.task('webdriver_update', protractor.webdriver_update);
 gulp.task('webdriver_standalone', protractor.webdriver_standalone);
 gulp.task('default', ['test-karma', 'build']);
 gulp.task('build', ['test-unit', 'ejs', 'scss', 'minify']);
+gulp.task('build-no-test', ['ejs', 'scss', 'minify']);
 gulp.task('bundle-html', bundleHTML);
 gulp.task('hint', ['hint-client', 'hint-server']);
 gulp.task('ejs', generateTemplates);
